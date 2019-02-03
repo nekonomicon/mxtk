@@ -44,12 +44,10 @@ mx_strcasecmp (const char *s1, const char *s2)
 
 
 
-char *
+void
 mx_strlower (char *str)
 {
 	int i;
 	for (i = strlen (str) - 1; i >= 0; i--)
 		str[i] = tolower (str[i]);
-
-	return str;
 }

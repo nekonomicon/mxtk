@@ -13,18 +13,17 @@
 //
 #include <mx/mxListBox.h>
 #include <mx/mxWindow.h>
-#include <qlistbox.h>
-//#include <ostream.h>
+#include <QListWidget>
 
 
 
-class mxListBox_i : public QListBox
+class mxListBox_i : public QListWidget
 {
 	Q_OBJECT
 	mxListBox *d_widget;
 
 public:
-	mxListBox_i (QWidget *parent, mxListBox *widget) : QListBox (parent)
+	mxListBox_i (QWidget *parent, mxListBox *widget) : QListWidget (parent)
 	{
 		d_widget = widget;
 	}
@@ -34,7 +33,7 @@ public:
 	}
 
 public slots:
-	void selectedEvent (int index)
+	void selectedEvent ()
 	{
 		if (d_widget->getId () > 0)
 		{

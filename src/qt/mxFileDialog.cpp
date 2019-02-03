@@ -13,8 +13,7 @@
 //
 #include <mx/mxFileDialog.h>
 #include <mx/mxWindow.h>
-#include <qfiledialog.h>
-#include <ostream.h>
+#include <QFileDialog>
 
 
 
@@ -26,10 +25,10 @@ mxGetOpenFileName (mxWindow *parent, const char *path, const char *filter)
 		p = (QWidget *) parent->getHandle ();
 
 	static char filename[256];
-	QString f = QFileDialog::getOpenFileName (path, filter, p);
+	QString f = QFileDialog::getOpenFileName (p, "Open File", path, filter);
 	if (!f.isEmpty () && !f.isNull ())
 	{
-		strcpy (filename, f.data ());
+		strcpy (filename, qPrintable (f));
 		return filename;
 	}
 	else
@@ -46,10 +45,10 @@ mxGetSaveFileName (mxWindow *parent, const char *path, const char *filter)
 		p = (QWidget *) parent->getHandle ();
 
 	static char filename[256];
-	QString f = QFileDialog::getSaveFileName (path, filter, p);
+	QString f = QFileDialog::getSaveFileName (p, "Save File", path, filter);
 	if (!f.isEmpty () && !f.isNull ())
 	{
-		strcpy (filename, f.data ());
+		strcpy (filename, qPrintable (f));
 		return filename;
 	}
 	else

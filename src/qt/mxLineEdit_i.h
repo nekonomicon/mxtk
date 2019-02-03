@@ -13,8 +13,7 @@
 //
 #include <mx/mxLineEdit.h>
 #include <mx/mxWindow.h>
-#include <qlineedit.h>
-//#include <ostream.h>
+#include <QLineEdit>
 
 
 
@@ -36,7 +35,7 @@ public:
 	}
 
 public slots:
-	void textChangedEvent (const char *text)
+	void textChangedEvent (const QString &text)
 	{
 		if (d_widget->getId () > 0)
 		{

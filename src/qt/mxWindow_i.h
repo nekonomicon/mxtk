@@ -13,25 +13,28 @@
 //
 #include <mx/mxWindow.h>
 #include <mx/mx.h>
-#include <qwindow.h>
-#include <qmenubar.h>
-#include <qapplication.h>
+#include <QResizeEvent>
+#include <QMainWindow>
+#include <QMenuBar>
+#include <QApplication>
 
 
 
-class mxWindow_i : public QWindow
+class mxWindow_i : public QMainWindow
 {
 	Q_OBJECT
 	mxWindow *d_window;
 	bool d_dragging;
 	int d_button;
-	
+	int d_timerId;
 public:
-	mxWindow_i (QWidget *parent, mxWindow *window) : QWindow (parent)
+	mxWindow_i (QWidget *parent, mxWindow *window) : QMainWindow ((QMainWindow *)parent)
 	{
 		d_window = window;
 		d_dragging = false;
 		d_button = 0;
+		d_timerId = 0;
+		//setMouseGrabEnabled(true);
 		setMouseTracking (true);
 	}
 
@@ -39,6 +42,15 @@ public:
 	{
 	}
 
+	void setTimerId(int timerId)
+	{
+		d_timerId = timerId;
+	}
+
+	int getTimerId()
+	{
+		return d_timerId;
+	}
 public slots:
 	void idleEvent ()
 	{
@@ -50,7 +62,7 @@ public slots:
 protected:
 	virtual void resizeEvent (QResizeEvent *e)
 	{
-		QWindow::resizeEvent (e);
+		QMainWindow::resizeEvent (e);
 		mxEvent event;
 		event.event = mxEvent::Size;
 		event.width = e->size ().width ();
@@ -60,21 +72,21 @@ protected:
 
 	virtual void mousePressEvent (QMouseEvent *e)
 	{
-		QWindow::mousePressEvent (e);
+		QMainWindow::mousePressEvent (e);
 		d_dragging = true;
 
 		d_button = 0;
-		if (e->state () & LeftButton)
+		if (e->buttons () & Qt::LeftButton)
 			d_button |= mxEvent::MouseLeftButton;
-		if (e->state () & RightButton)
+		if (e->buttons () & Qt::RightButton)
 			d_button |= mxEvent::MouseRightButton;
-		if (e->state () & MidButton)
+		if (e->buttons () & Qt::MidButton)
 			d_button |= mxEvent::MouseMiddleButton;
 		
 		mxEvent event;
-		if (e->state () & ControlButton)
+		if (e->buttons () & Qt::ControlModifier)
 			event.modifiers |= mxEvent::KeyCtrl;
-		if (e->state () & ShiftButton)
+		if (e->buttons () & Qt::ShiftModifier)
 			event.modifiers |= mxEvent::KeyShift;
 		event.event = mxEvent::MouseDown;
 		event.buttons = d_button;
@@ -85,20 +97,20 @@ protected:
 
 	virtual void mouseMoveEvent (QMouseEvent *e)
 	{
-		QWindow::mouseMoveEvent (e);
+		QMainWindow::mouseMoveEvent (e);
 
 		d_button = 0;
-		if (e->state () & LeftButton)
+		if (e->buttons () & Qt::LeftButton)
 			d_button |= mxEvent::MouseLeftButton;
-		if (e->state () & RightButton)
+		if (e->buttons () & Qt::RightButton)
 			d_button |= mxEvent::MouseRightButton;
-		if (e->state () & MidButton)
+		if (e->buttons () & Qt::MidButton)
 			d_button |= mxEvent::MouseMiddleButton;
 		
 		mxEvent event;
-		if (e->state () & ControlButton)
+		if (e->buttons () & Qt::ControlModifier)
 			event.modifiers |= mxEvent::KeyCtrl;
-		if (e->state () & ShiftButton)
+		if (e->buttons () & Qt::ShiftModifier)
 			event.modifiers |= mxEvent::KeyShift;
 
 		event.buttons = d_button;
@@ -115,21 +127,21 @@ protected:
 
 	virtual void mouseReleaseEvent (QMouseEvent *e)
 	{
-		QWindow::mouseReleaseEvent (e);
+		QMainWindow::mouseReleaseEvent (e);
 		d_dragging = false;
 		d_button = 0;
 		
-		if (e->state () & LeftButton)
+		if (e->buttons () & Qt::LeftButton)
 			d_button |= mxEvent::MouseLeftButton;
-		if (e->state () & RightButton)
+		if (e->buttons () & Qt::RightButton)
 			d_button |= mxEvent::MouseRightButton;
-		if (e->state () & MidButton)
+		if (e->buttons () & Qt::MidButton)
 			d_button |= mxEvent::MouseMiddleButton;
 		
 		mxEvent event;
-		if (e->state () & ControlButton)
+		if (e->buttons () & Qt::ControlModifier)
 			event.modifiers |= mxEvent::KeyCtrl;
-		if (e->state () & ShiftButton)
+		if (e->buttons () & Qt::ShiftModifier)
 			event.modifiers |= mxEvent::KeyShift;
 
 		event.event = mxEvent::MouseUp;

@@ -13,8 +13,8 @@
 //
 #include <mx/mxGlWindow.h>
 #include <mx/mx.h>
-#include <qgl.h>
-//#include <ostream.h>
+#include <QGL>
+#include <QMouseEvent>
 
 
 
@@ -69,17 +69,17 @@ protected:
 		d_dragging = true;
 		
 		d_button = 0;
-		if (e->state () & LeftButton)
+		if (e->buttons () & Qt::LeftButton)
 			d_button |= mxEvent::MouseLeftButton;
-		if (e->state () & RightButton)
+		if (e->buttons () & Qt::RightButton)
 			d_button |= mxEvent::MouseRightButton;
-		if (e->state () & MidButton)
+		if (e->buttons () & Qt::MidButton)
 			d_button |= mxEvent::MouseMiddleButton;
 
 		mxEvent event;
-		if (e->state () & ControlButton)
+		if (e->buttons () & Qt::ControlModifier)
 			event.modifiers |= mxEvent::KeyCtrl;
-		if (e->state () & ShiftButton)
+		if (e->buttons () & Qt::ShiftModifier)
 			event.modifiers |= mxEvent::KeyShift;
 		event.event = mxEvent::MouseDown;
 		event.buttons = d_button;
@@ -93,17 +93,17 @@ protected:
 		QGLWidget::mouseMoveEvent (e);
 		
 		d_button = 0;
-		if (e->state () & LeftButton)
+		if (e->buttons () & Qt::LeftButton)
 			d_button |= mxEvent::MouseLeftButton;
-		if (e->state () & RightButton)
+		if (e->buttons () & Qt::RightButton)
 			d_button |= mxEvent::MouseRightButton;
-		if (e->state () & MidButton)
+		if (e->buttons () & Qt::MidButton)
 			d_button |= mxEvent::MouseMiddleButton;
 
 		mxEvent event;
-		if (e->state () & ControlButton)
+		if (e->buttons () & Qt::ControlModifier)
 			event.modifiers |= mxEvent::KeyCtrl;
-		if (e->state () & ShiftButton)
+		if (e->buttons () & Qt::ShiftModifier)
 			event.modifiers |= mxEvent::KeyShift;
 
 		event.buttons = d_button;
@@ -124,17 +124,17 @@ protected:
 		d_dragging = false;
 
 		d_button = 0;
-		if (e->state () & LeftButton)
+		if (e->buttons () & Qt::LeftButton)
 			d_button |= mxEvent::MouseLeftButton;
-		if (e->state () & RightButton)
+		if (e->buttons () & Qt::RightButton)
 			d_button |= mxEvent::MouseRightButton;
-		if (e->state () & MidButton)
+		if (e->buttons () & Qt::MidButton)
 			d_button |= mxEvent::MouseMiddleButton;
 
 		mxEvent event;
-		if (e->state () & ControlButton)
+		if (e->buttons () & Qt::ControlModifier)
 			event.modifiers |= mxEvent::KeyCtrl;
-		if (e->state () & ShiftButton)
+		if (e->buttons () & Qt::ShiftModifier)
 			event.modifiers |= mxEvent::KeyShift;
 
 		event.event = mxEvent::MouseUp;

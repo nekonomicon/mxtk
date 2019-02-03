@@ -12,17 +12,16 @@
 //                 implied.
 //
 #include <mx/mxMenu.h>
-#include <qpopupmenu.h>
-//#include <ostream.h>
+#include <QMenu>
 
+extern QMap<int, QAction*> g_actionList;
 
-
-class mxMenu_i : public QPopupMenu
+class mxMenu_i : public QMenu
 {
 	mxMenu *d_widget;
 
 public:
-	mxMenu_i (mxMenu *menu) : QPopupMenu ()
+	mxMenu_i (mxMenu *menu) : QMenu ()
 	{
 		d_widget = menu;
 	}
@@ -38,7 +37,6 @@ mxMenu::mxMenu ()
 : mxWidget (0, 0, 0, 0, 0)
 {
 	d_this = new mxMenu_i (this);
-	d_this->setCheckable (true);
 
 	setHandle ((void *) d_this);
 	setType (MX_MENU);
@@ -56,7 +54,8 @@ mxMenu::~mxMenu ()
 void
 mxMenu::add (const char *item, int id)
 {
-	d_this->insertItem (item, id);
+	g_actionList[id] = d_this->addAction (item);
+	g_actionList[id]->setCheckable (true);
 }
 
 
@@ -64,7 +63,9 @@ mxMenu::add (const char *item, int id)
 void
 mxMenu::addMenu (const char *item, mxMenu *menu)
 {
-	d_this->insertItem (item, (QPopupMenu *) menu->getHandle ());
+	QMenu *_menu = (QMenu*)menu->getHandle ();
+	_menu->setTitle(item);
+	d_this->addMenu (_menu);
 }
 
 
@@ -72,7 +73,7 @@ mxMenu::addMenu (const char *item, mxMenu *menu)
 void
 mxMenu::addSeparator ()
 {
-	d_this->insertSeparator ();
+	d_this->addSeparator ();
 }
 
 
@@ -80,7 +81,7 @@ mxMenu::addSeparator ()
 void
 mxMenu::setEnabled (int id, bool b)
 {
-	d_this->setItemEnabled (id, b);
+	g_actionList[id]->setEnabled (b);
 }
 
 
@@ -88,7 +89,7 @@ mxMenu::setEnabled (int id, bool b)
 void
 mxMenu::setChecked (int id, bool b)
 {
-	d_this->setItemChecked (id, b);
+	g_actionList[id]->setChecked (b);
 }
 
 
@@ -96,7 +97,7 @@ mxMenu::setChecked (int id, bool b)
 bool
 mxMenu::isEnabled (int id) const
 {
-	return d_this->isItemEnabled (id);
+	return g_actionList[id]->isEnabled();
 }
 
 
@@ -104,5 +105,5 @@ mxMenu::isEnabled (int id) const
 bool
 mxMenu::isChecked (int id) const
 {
-	return d_this->isItemChecked (id);
+	return g_actionList[id]->isChecked();
 }

@@ -13,18 +13,19 @@
 //
 #include <mx/mxTreeView.h>
 #include <mx/mxWindow.h>
-#include <qlistview.h>
-//#include <ostream.h>
+#include <QTreeWidget>
+#include <QTreeWidgetItem>
+#include <QResizeEvent>
 
 
 
-class mxTreeView_i : public QListView
+class mxTreeView_i : public QTreeWidget
 {
 	Q_OBJECT
 	mxTreeView *d_widget;
 
 public:
-	mxTreeView_i (QWidget *parent, mxTreeView *widget) : QListView (parent)
+	mxTreeView_i (QWidget *parent, mxTreeView *widget) : QTreeWidget (parent)
 	{
 		d_widget = widget;
 	}
@@ -37,7 +38,16 @@ protected:
 	virtual void resizeEvent (QResizeEvent *event)
 	{
 		setColumnWidth (0, event->size ().width ());
-		QListView::resizeEvent (event);
+		QTreeWidget::resizeEvent (event);
+	}
+
+	virtual void mousePressEvent (QMouseEvent *event) 
+        {
+		if (event->button() == Qt::RightButton)
+		{
+			emit rightButtonClickedEvent(event->pos());
+		}
+		QTreeWidget::mousePressEvent(event);
 	}
 
 public slots:
@@ -59,7 +69,7 @@ public slots:
 		}
 	}
 	
-	void doubleClickedEvent (QListViewItem *lvi)
+	void doubleClickedEvent (QTreeWidgetItem *item, int column)
 	{
 		if (d_widget->getId () > 0)
 		{
@@ -78,7 +88,7 @@ public slots:
 		}
 	}
 	
-	void rightButtonClickedEvent (QListViewItem *lvi, const QPoint& pos, int column)
+	void rightButtonClickedEvent (const QPoint &pos)
 	{
 		if (d_widget->getId () > 0)
 		{
@@ -88,7 +98,7 @@ public slots:
 			event.widget = d_widget;
 			event.action = d_widget->getId ();
 			event.flags = mxEvent::RightClicked;
-			QPoint point = mapFromGlobal (pos);			
+			QPoint point = pos;//mapFromGlobal (pos);			
 			event.x = point.x ();
 			event.y = point.y ();
 			while (parent)

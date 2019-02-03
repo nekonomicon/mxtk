@@ -38,7 +38,7 @@ int style)
 
 mxGlWindow::~mxGlWindow ()
 {
-	d_this->killTimers ();
+	//d_this->killTimer ();
 	delete d_this;
 }
 

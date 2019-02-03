@@ -13,17 +13,17 @@
 //
 #include <mx/mxToolTip.h>
 #include <mx/mxWindow.h>
-#include <qtooltip.h>
 
 
 
 void
 mxToolTip::add (mxWidget *widget, const char *text)
 {
-	QWidget *w = 0;
-	
+	QWidget *w = nullptr;
 	if (widget)
+	{
 		w = (QWidget *) widget->getHandle ();
-		
-	QToolTip::add (w, text);
+		if(w)
+			w->setToolTip(text);
+	}
 }

@@ -13,8 +13,7 @@
 //
 #include <mx/mxProgressBar.h>
 #include <mx/mxWindow.h>
-#include <qprogressbar.h>
-//#include <ostream.h>
+#include <QProgressBar>
 
 
 
@@ -26,8 +25,8 @@ public:
 	mxProgressBar_i (QWidget *parent, mxProgressBar *widget) : QProgressBar (parent)
 	{
 		d_widget = widget;
-		setTotalSteps (100);
-		setProgress (0);
+		setRange (0, 100);
+		setValue (0);
 	}
 
 	~mxProgressBar_i ()
@@ -67,9 +66,9 @@ mxProgressBar::~mxProgressBar ()
 void
 mxProgressBar::setValue (int value)
 {
-	if (value < d_this->progress ())
+	if (value < d_this->value ())
 		d_this->reset ();
-	d_this->setProgress (value);
+	d_this->setValue (value);
 }
 
 
@@ -77,7 +76,7 @@ mxProgressBar::setValue (int value)
 void
 mxProgressBar::setTotalSteps (int steps)
 {
-	d_this->setTotalSteps (steps);
+	d_this->setRange (0, steps);
 }
 
 
@@ -85,7 +84,7 @@ mxProgressBar::setTotalSteps (int steps)
 int
 mxProgressBar::getValue () const
 {
-	return d_this->progress ();
+	return d_this->value ();
 }
 
 
@@ -93,5 +92,5 @@ mxProgressBar::getValue () const
 int
 mxProgressBar::getTotalSteps () const
 {
-	return d_this->totalSteps ();
+	return d_this->maximum ();
 }

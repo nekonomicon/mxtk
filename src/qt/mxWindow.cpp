@@ -21,7 +21,7 @@ extern mxWindow *d_mainWindow;
 
 
 mxWindow::mxWindow (mxWindow *parent, int x, int y, int w, int h, const char
-*label, int style = 0)
+*label, int style)
 : mxWidget (parent, x, y, w, h, label)
 {
 	QWidget *p = 0;
@@ -46,7 +46,6 @@ mxWindow::mxWindow (mxWindow *parent, int x, int y, int w, int h, const char
 	if (!d_mainWindow)
 	{
 		d_mainWindow = this;
-		d_Application->setMainWidget (d_this);
 	}
 }
 
@@ -54,7 +53,7 @@ mxWindow::mxWindow (mxWindow *parent, int x, int y, int w, int h, const char
 
 mxWindow::~mxWindow ()
 {
-	d_this->killTimers ();
+	d_this->killTimer (d_this->getTimerId());
 	delete d_this;
 }
 
@@ -79,9 +78,12 @@ void
 mxWindow::setTimer (int milliSeconds)
 {
 	if (milliSeconds > 0)
-		d_this->startTimer (milliSeconds);
+	{
+		int timerId = d_this->startTimer (milliSeconds);
+		d_this->setTimerId (timerId);
+	}
 	else
-		d_this->killTimers ();
+		d_this->killTimer (d_this->getTimerId());
 }
 
 

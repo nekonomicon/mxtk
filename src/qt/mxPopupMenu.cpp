@@ -12,7 +12,7 @@
 //                 implied.
 //
 #include "mxPopupMenu_i.h"
-#include <qapplication.h>
+#include <QApplication>
 
 
 
@@ -20,8 +20,8 @@ mxPopupMenu::mxPopupMenu ()
 : mxWidget (0, 0, 0, 0, 0)
 {
 	d_this = new mxPopupMenu_i (this);
-	d_this->setCheckable (true);
-	d_this->connect (d_this, SIGNAL (activated (int)), d_this, SLOT (activatedEvent (int)));
+	d_this->menuAction()->setCheckable (true);
+	d_this->connect (d_this, SIGNAL (triggered (QAction*)), d_this, SLOT (activatedEvent (QAction*)));
 
 	setHandle ((void *) d_this);
 	setType (MX_POPUPMENU);
@@ -58,23 +58,25 @@ mxPopupMenu::popup (mxWidget *widget, int x, int y)
 void
 mxPopupMenu::add (const char *item, int id)
 {
-	d_this->insertItem (item, id);
+	d_this->d_actionList[id] = d_this->addAction (item);
 }
 
 
-
+/*
 void
 mxPopupMenu::addMenu (const char *item, mxPopupMenu *menu)
 {
-	d_this->insertItem (item, (QPopupMenu *) menu->getHandle ());
+	QMenu *_menu = (QMenu *) menu->getHandle ();
+	_menu->setTitle(item);
+	d_this->addMenu (_menu);
 }
-
+*/
 
 
 void
 mxPopupMenu::addSeparator ()
 {
-	d_this->insertSeparator ();
+	d_this->addSeparator ();
 }
 
 
@@ -82,7 +84,7 @@ mxPopupMenu::addSeparator ()
 void
 mxPopupMenu::setEnabled (int id, bool b)
 {
-	d_this->setItemEnabled (id, b);
+	d_this->d_actionList[id]->setEnabled (b);
 }
 
 
@@ -90,7 +92,7 @@ mxPopupMenu::setEnabled (int id, bool b)
 void
 mxPopupMenu::setChecked (int id, bool b)
 {
-	d_this->setItemChecked (id, b);
+	d_this->d_actionList[id]->setChecked (b);
 }
 
 
@@ -98,7 +100,7 @@ mxPopupMenu::setChecked (int id, bool b)
 bool
 mxPopupMenu::isEnabled (int id) const
 {
-	return d_this->isItemEnabled (id);
+	return d_this->d_actionList[id]->isEnabled ();
 }
 
 
@@ -106,5 +108,5 @@ mxPopupMenu::isEnabled (int id) const
 bool
 mxPopupMenu::isChecked (int id) const
 {
-	return d_this->isItemChecked (id);
+	return d_this->d_actionList[id]->isChecked ();
 }

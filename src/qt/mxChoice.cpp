@@ -46,7 +46,7 @@ mxChoice::~mxChoice ()
 void
 mxChoice::add (const char *item)
 {
-	d_this->insertItem (item);
+	d_this->addItem (item);
 }
 
 
@@ -56,7 +56,7 @@ mxChoice::select (int index)
 {
 	QObject::disconnect (d_this, SIGNAL (activated (int)), d_this, SLOT (activatedEvent (int)));
 	d_this->d_currentItem = index;
-	d_this->setCurrentItem (index);
+	d_this->setCurrentIndex (index);
 	d_this->connect (d_this, SIGNAL (activated (int)), d_this, SLOT (activatedEvent (int)));
 }
 
@@ -89,6 +89,6 @@ mxChoice::getItemCount () const
 int
 mxChoice::getSelectedIndex () const
 {
-	return d_this->currentItem ();
+	return d_this->currentIndex ();
 }
 

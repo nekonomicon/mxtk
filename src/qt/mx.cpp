@@ -14,18 +14,18 @@
 #include <mx/mx.h>
 #include <mx/mxWindow.h>
 #include <mx/mxLinkedList.h>
-#include <qapplication.h>
-#include <qtimer.h>
-#include <ostream.h>
+#include <QApplication>
+#include <QDesktopWidget>
+#include <QTimer>
 #include <time.h>
 
 
 
 QApplication *d_Application;
-mxWindow *d_mainWindow = 0;
-mxLinkedList *d_widgetList = 0;
-QTimer *d_timer = 0;
-static char d_appPath[256] = "";
+mxWindow *d_mainWindow;
+mxLinkedList *d_widgetList;
+QTimer *d_timer;
+static char d_appPath[256];
 
 
 
@@ -55,6 +55,7 @@ mx::init (int argc, char *argv[])
 		
 	d_Application = new QApplication (argc, argv);
 	d_widgetList = new mxLinkedList ();
+	return 0;
 }
 
 
@@ -108,6 +109,7 @@ mx::quit ()
 int
 mx::setDisplayMode (int w, int h, int bpp)
 {
+	return 0;
 }
 
 
@@ -172,3 +174,7 @@ mx::getTickCount ()
 	return clock () * 1000	/ CLOCKS_PER_SEC;
 }
 
+void
+mx::cleanup ()
+{
+}

@@ -12,9 +12,7 @@
 //                 implied.
 //
 #include <mx/mxLabel.h>
-#include <qlabel.h>
-//#include <ostream.h>
-
+#include <QLabel>
 
 
 class mxLabel_i : public QLabel
@@ -25,7 +23,7 @@ public:
 	mxLabel_i (QWidget *parent, mxLabel *widget) : QLabel (parent)
 	{
 		d_widget = widget;
-		setAlignment (AlignLeft | AlignTop);
+		setAlignment (Qt::AlignLeft | Qt::AlignTop);
 	}
 
 	~mxLabel_i ()

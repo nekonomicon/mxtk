@@ -13,19 +13,19 @@
 //
 #include <mx/mxTab.h>
 #include <mx/mxWindow.h>
-#include <qtabdialog.h>
+#include <QTabWidget>
+#include <QDialog>
+#include <QDialogButtonBox>
+#include <QVBoxLayout>
 
-
-
-class mxTab_i : public QTabDialog
+class mxTab_i : public QTabWidget
 {
 	mxTab *d_widget;
 	
 public:
-	mxTab_i (QWidget *parent, mxTab *widget) : QTabDialog (parent)
+	mxTab_i (QWidget *parent, mxTab *widget) : QTabWidget (parent)
 	{
 		d_widget = widget;
-		setOkButton (0);
 	}
 	
 	~mxTab_i ()

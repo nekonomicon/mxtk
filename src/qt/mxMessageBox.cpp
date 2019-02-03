@@ -13,8 +13,7 @@
 //
 #include <mx/mxMessageBox.h>
 #include <mx/mxWindow.h>
-#include <qmessagebox.h>
-//#include <ostream.h>
+#include <QMessageBox>
 
 
 int

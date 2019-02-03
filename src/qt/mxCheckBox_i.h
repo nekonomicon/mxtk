@@ -13,8 +13,7 @@
 //
 #include <mx/mxCheckBox.h>
 #include <mx/mxWindow.h>
-#include <qcheckbox.h>
-//#include <ostream.h>
+#include <QCheckBox>
 
 
 

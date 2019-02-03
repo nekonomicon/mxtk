@@ -23,9 +23,9 @@ style)
 	if (parent)
 		p = (QWidget *) ((mxWidget *) parent)->getHandle ();
 	d_this = new mxListBox_i (p, this);
+
 	if (style == MultiSelection)
-		d_this->setMultiSelection (true);
-		
+		d_this->setSelectionMode( QAbstractItemView::ExtendedSelection );
 	d_this->connect (d_this, SIGNAL (selected (int)), d_this, SLOT (selectedEvent (int)));
 
 	setHandle ((void *) d_this);
@@ -48,7 +48,7 @@ mxListBox::~ mxListBox ()
 void
 mxListBox::add (const char *item)
 {
-	d_this->insertItem (item);
+	d_this->addItem (item);
 }
 
 
@@ -56,9 +56,9 @@ mxListBox::add (const char *item)
 void
 mxListBox::select (int index)
 {
-	QObject::disconnect (d_this, SIGNAL (selected (int)), d_this, SLOT (selectedEvent (int)));
-	d_this->setSelected (index, true);
-	d_this->connect (d_this, SIGNAL (selected (int)), d_this, SLOT (selectedEvent (int)));
+	QObject::disconnect (d_this, SIGNAL (itemSelectionChanged ()), d_this, SLOT (selectedEvent ()));
+	d_this->setCurrentRow (index, QItemSelectionModel::Select);
+	d_this->connect (d_this, SIGNAL (itemSelectionChanged ()), d_this, SLOT (selectedEvent ()));
 }
 
 
@@ -66,9 +66,9 @@ mxListBox::select (int index)
 void
 mxListBox::deselect (int index)
 {
-	QObject::disconnect (d_this, SIGNAL (selected (int)), d_this, SLOT (selectedEvent (int)));
-	d_this->setSelected (index, false);
-	d_this->connect (d_this, SIGNAL (selected (int)), d_this, SLOT (selectedEvent (int)));
+	QObject::disconnect (d_this, SIGNAL (itemSelectionChanged ()), d_this, SLOT (selectedEvent ()));
+	d_this->setCurrentRow (index, QItemSelectionModel::Deselect);
+	d_this->connect (d_this, SIGNAL (itemSelectionChanged ()), d_this, SLOT (selectedEvent ()));
 }
 
 
@@ -76,7 +76,7 @@ mxListBox::deselect (int index)
 void
 mxListBox::remove (int index)
 {
-	d_this->removeItem (index);
+	d_this->removeItemWidget (d_this->takeItem(index));
 }
 
 
@@ -88,7 +88,7 @@ mxListBox::removeAll ()
 }
 
 
-
+int
 mxListBox::getItemCount () const
 {
 	return (int) d_this->count ();
@@ -99,7 +99,7 @@ mxListBox::getItemCount () const
 int
 mxListBox::getSelectedIndex () const
 {
-	return d_this->currentItem ();
+	return d_this->currentRow ();
 }
 
 
@@ -107,5 +107,5 @@ mxListBox::getSelectedIndex () const
 bool
 mxListBox::isSelected (int index) const
 {
-	return d_this->isSelected (index);
+	return d_this->takeItem (index)->isSelected();
 }

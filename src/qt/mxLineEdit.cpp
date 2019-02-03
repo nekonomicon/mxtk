@@ -24,7 +24,7 @@ mxLineEdit::mxLineEdit (mxWindow *parent, int x, int y, int w, int h, const char
 		p = (QWidget *) parent->getHandle ();
 
 	d_this = new mxLineEdit_i (p, this);
-	d_this->connect (d_this, SIGNAL(textChanged (const char*)), d_this, SLOT (textChangedEvent (const char*)));
+	d_this->connect (d_this, SIGNAL(textChanged (const QString &)), d_this, SLOT (textChangedEvent (const QString &)));
 
 	if (style == Password)
 		d_this->setEchoMode (QLineEdit::Password);
@@ -46,7 +46,7 @@ mxLineEdit::mxLineEdit (mxWindow *parent, int x, int y, int w, int h, const char
 
 mxLineEdit::~mxLineEdit ()
 {
-	QObject::disconnect (d_this, SIGNAL(textChanged (const char*)), d_this, SLOT (textChangedEvent (const char*)));
+	QObject::disconnect (d_this, SIGNAL(textChanged (const QString &)), d_this, SLOT (textChangedEvent (const QString &)));
 	d_this->setText ("");
 	delete d_this;
 }

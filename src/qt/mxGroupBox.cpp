@@ -12,9 +12,7 @@
 //                 implied.
 //
 #include <mx/mxGroupBox.h>
-#include <qgroupbox.h>
-//#include <ostream.h>
-
+#include <QGroupBox>
 
 
 class mxGroupBox_i : public QGroupBox

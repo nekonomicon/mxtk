@@ -24,10 +24,15 @@ mxSlider::mxSlider (mxWindow *parent, int x, int y, int w, int h, int id, int st
 
 	d_this = new mxSlider_i (p, this);
 	if (style == Horizontal)
-		d_this->setOrientation (QSlider::Horizontal);
+	{
+		d_this->setOrientation(Qt::Horizontal);
+		d_this->setTickPosition (QSlider::TicksRight);
+	}
 	else if (style == Vertical)
-		d_this->setOrientation (QSlider::Vertical);
-		
+	{
+		d_this->setOrientation(Qt::Vertical);
+		d_this->setTickPosition (QSlider::TicksBelow);
+	}
 	d_this->connect (d_this, SIGNAL (valueChanged (int)), d_this, SLOT (valueChangedEvent (int)));
 
 	setHandle ((void *) d_this);
@@ -72,7 +77,9 @@ void
 mxSlider::setSteps (int line, int page)
 {
 	QObject::disconnect (d_this, SIGNAL (valueChanged (int)), d_this, SLOT (valueChangedEvent (int)));
-	d_this->setSteps (line, page);
+	//d_this->setSteps (line, page);
+	d_this->setSingleStep(line);
+	d_this->setPageStep(page);
 	d_this->connect (d_this, SIGNAL (valueChanged (int)), d_this, SLOT (valueChangedEvent (int)));
 }
 
@@ -89,7 +96,7 @@ mxSlider::getValue () const
 int
 mxSlider::getMinValue () const
 {
-	return d_this->minValue ();
+	return d_this->minimum ();
 }
 
 
@@ -97,7 +104,7 @@ mxSlider::getMinValue () const
 int
 mxSlider::getMaxValue () const
 {
-	return d_this->maxValue ();
+	return d_this->maximum ();
 }
 
 
@@ -105,7 +112,7 @@ mxSlider::getMaxValue () const
 int
 mxSlider::getLineStep () const
 {
-	return d_this->lineStep ();
+	return d_this->singleStep ();
 }
 
 

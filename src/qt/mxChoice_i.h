@@ -13,8 +13,7 @@
 //
 #include <mx/mxChoice.h>
 #include <mx/mxWindow.h>
-#include <qcombobox.h>
-//#include <ostream.h>
+#include <QComboBox>
 
 
 

@@ -13,8 +13,7 @@
 //
 #include <mx/mxButton.h>
 #include <mx/mxWindow.h>
-#include <qpushbutton.h>
-//#include <ostream.h>
+#include <QPushButton>
 
 
 

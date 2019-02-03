@@ -22,11 +22,11 @@ mxTreeView::mxTreeView (mxWindow *parent, int x, int y, int w, int h, int id)
 	if (parent)
 		p = (QWidget *) parent->getHandle ();
 	d_this = new mxTreeView_i (p, this);
-	d_this->addColumn ("");
+	//d_this->addColumn ("");
 	d_this->setRootIsDecorated (true);
-	d_this->connect (d_this, SIGNAL (selectionChanged ()), d_this, SLOT (selectionChangedEvent ()));	
-	d_this->connect (d_this, SIGNAL (doubleClicked (QListViewItem *)), d_this, SLOT (doubleClickedEvent (QListViewItem *)));	
-	d_this->connect (d_this, SIGNAL (rightButtonClicked (QListViewItem *, const QPoint&, int)), d_this, SLOT (rightButtonClickedEvent (QListViewItem *, const QPoint&, int)));	
+	d_this->connect (d_this, SIGNAL (itemSelectionChanged ()), d_this, SLOT (selectionChangedEvent ()));	
+	d_this->connect (d_this, SIGNAL (itemDoubleClicked(QTreeWidgetItem *, int)), d_this, SLOT (doubleClickedEvent (QTreeWidgetItem *, int)));	
+	//d_this->connect (d_this, SIGNAL (itemRightButtonClicked (QTreeWidgetItem *, const QPoint&, int)), d_this, SLOT (rightButtonClickedEvent (QTreeWidgetItem *, const QPoint&, int)));	
 
 	setHandle ((void *) d_this);
 	setType (MX_TREEVIEW);
@@ -49,12 +49,12 @@ mxTreeView::~mxTreeView ()
 mxTreeViewItem*
 mxTreeView::add (mxTreeViewItem *parent, const char *item)
 {
-	QListViewItem *lvi;
+	QTreeWidgetItem *lvi;
 
 	if (parent)
-		lvi = new QListViewItem ((QListViewItem *) parent, item);
+		lvi = new QTreeWidgetItem ((QTreeWidgetItem *) parent, QStringList(item));
 	else
-		lvi = new QListViewItem ((QListView *) d_this, item);
+		lvi = new QTreeWidgetItem ((QTreeWidget *) d_this, QStringList(item));
 
 	return (mxTreeViewItem *) lvi;
 }
@@ -67,7 +67,7 @@ mxTreeView::remove (mxTreeViewItem *item)
 	if (!item)
 		d_this->clear ();
 	else
-		delete (QListViewItem *) item;
+		delete (QTreeWidgetItem *) item;
 }
 
 
@@ -76,9 +76,9 @@ mxTreeViewItem *
 mxTreeView::getFirstChild (mxTreeViewItem *item) const
 {
 	if (item)
-		return (mxTreeViewItem *) ((QListViewItem *) item)->firstChild ();
+		return (mxTreeViewItem *) ((QTreeWidgetItem *) item)->child (0);
 	else
-		return (mxTreeViewItem *) d_this->firstChild ();
+		return (mxTreeViewItem *) d_this->topLevelItem (0);
 }
 
 
@@ -87,7 +87,21 @@ mxTreeViewItem *
 mxTreeView::getNextChild (mxTreeViewItem *item) const
 {
 	if (item)
-		return (mxTreeViewItem *) ((QListViewItem *) item)->nextSibling ();
+	{
+		QTreeWidgetItem *current = (QTreeWidgetItem *) item;
+		QTreeWidgetItem *parent = current->parent ();
+		QTreeWidgetItem *nextSibling;
+		if (parent)
+		{
+			nextSibling = parent->child(parent->indexOfChild(current) + 1);
+		}
+		else
+		{
+			QTreeWidget *treeWidget = current->treeWidget();
+			nextSibling = treeWidget->topLevelItem(treeWidget->indexOfTopLevelItem(current) + 1);
+		}
+		return (mxTreeViewItem *) nextSibling;
+	}
 
 	return 0;
 }
@@ -106,7 +120,7 @@ void
 mxTreeView::setLabel (mxTreeViewItem *item, const char *label)
 {
 	if (item)
-		((QListViewItem *) item)->setText (0, label);
+		((QTreeWidgetItem *) item)->setText (0, label);
 }
 
 
@@ -122,7 +136,7 @@ void
 mxTreeView::setOpen (mxTreeViewItem *item, bool b)
 {
 	if (item)
-		((QListViewItem *) item)->setOpen (b);
+		((QTreeWidgetItem *) item)->setExpanded (b);
 }
 
 
@@ -131,7 +145,7 @@ void
 mxTreeView::setSelected (mxTreeViewItem *item, bool b)
 {
 	if (item)
-		((QListViewItem *) item)->setSelected (b);
+		((QTreeWidgetItem *) item)->setSelected (b);
 }
 
 
@@ -140,7 +154,7 @@ const char *
 mxTreeView::getLabel (mxTreeViewItem *item) const
 {
 	if (item)
-		return ((QListViewItem *) item)->text (0);
+		return qPrintable(((QTreeWidgetItem *) item)->text (0));
 		
 	return 0;
 }
@@ -159,7 +173,7 @@ bool
 mxTreeView::isOpen (mxTreeViewItem *item) const
 {
 	if (item)
-		return ((QListViewItem *) item)->isOpen ();
+		return ((QTreeWidgetItem *) item)->isExpanded ();
 
 	return false;
 }
@@ -170,7 +184,7 @@ bool
 mxTreeView::isSelected (mxTreeViewItem *item) const
 {
 	if (item)
-		return ((QListViewItem *) item)->isSelected ();
+		return ((QTreeWidgetItem *) item)->isSelected ();
 		
 	return 0;
 }
@@ -181,7 +195,7 @@ mxTreeViewItem *
 mxTreeView::getParent (mxTreeViewItem *item) const
 {
 	if (item)
-		return (mxTreeViewItem *) ((QListViewItem *) item)->parent ();
+		return (mxTreeViewItem *) ((QTreeWidgetItem *) item)->parent ();
 
 	return 0;
 }

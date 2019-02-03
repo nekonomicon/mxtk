@@ -13,8 +13,7 @@
 //
 #include <mx/mxSlider.h>
 #include <mx/mxWindow.h>
-#include <qslider.h>
-//#include <ostream.h>
+#include <QSlider>
 
 
 

@@ -13,16 +13,14 @@
 //
 #include <mx/mxMenuBar.h>
 #include <mx/mxWindow.h>
-#include <qmenubar.h>
-//#include <ostream.h>
+#include <QMenuBar>
 
-
+extern QMap<int, QAction*> g_actionList;
 
 class mxMenuBar_i : public QMenuBar
 {
 	Q_OBJECT
 	mxMenuBar *d_widget;
-
 public:
 	mxMenuBar_i (QWidget *parent, mxMenuBar *menuBar) : QMenuBar (parent)
 	{
@@ -34,8 +32,9 @@ public:
 	}
 
 public slots:
-	void activatedEvent (int itemId)
+	void activatedEvent (QAction *action)
 	{
+		int itemId = g_actionList.key(action);
 		if (itemId > 0)
 		{
 			mxWindow *parent = d_widget->getParent ();

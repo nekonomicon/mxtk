@@ -12,14 +12,15 @@
 //                 implied.
 //
 #include <mx/mxWidget.h>
-#include <qwidget.h>
-#include <qbutton.h>
-#include <qlineedit.h>
-#include <qlabel.h>
-#include <qgroupbox.h>
+#include <QWidget>
+#include <QPushButton>
+#include <QLineEdit>
+#include <QLabel>
+#include <QGroupBox>
+#include <QCheckBox>
+#include <QRadioButton>
 #include <string.h>
 #include <stdlib.h>
-//#include <ostream.h>
 
 
 
@@ -43,6 +44,7 @@ public:
 mxWidget::mxWidget (mxWindow *parent, int x, int y, int w, int h, const char *label)
 {
 	d_this = new mxWidget_i;
+	d_this->d_widget = nullptr;
 
 	setHandle (0);
 	setType (-1);
@@ -68,7 +70,7 @@ mxWidget::~mxWidget ()
 
 void
 mxWidget::setHandle (void *handle)
-{
+{		
 	d_this->d_widget = (QWidget *) handle;
 }
 
@@ -106,23 +108,27 @@ mxWidget::setLabel (const char *label)
 {
 	if (d_this->d_widget)
 	{
-		if (d_this->d_widget->inherits ("QButton"))
-			((QButton *) d_this->d_widget)->setText (label);
+		if (d_this->d_widget->inherits ("QPushButton"))
+			((QPushButton *) d_this->d_widget)->setText (label);
+		else if (d_this->d_widget->inherits ("QCheckBox"))
+			((QCheckBox *) d_this->d_widget)->setText (label);
+		else if (d_this->d_widget->inherits ("QRadioButton"))
+			((QRadioButton *) d_this->d_widget)->setText (label);
 		else if (d_this->d_widget->inherits ("QLineEdit"))
 		{
 			QLineEdit *le = (QLineEdit *) d_this->d_widget;
 			QObject::disconnect (le, SIGNAL(textChanged (const
-			char*)), le, SLOT (textChangedEvent (const char*)));
+			QString &)), le, SLOT (textChangedEvent (const QString &)));
 			le->setText (label);
 			le->connect (le, SIGNAL(textChanged (const
-			char*)), le, SLOT (textChangedEvent (const char*)));
+			QString &)), le, SLOT (textChangedEvent (const QString &)));
 		}
 		else if (d_this->d_widget->inherits ("QLabel"))
 			((QLabel *) d_this->d_widget)->setText (label);
 		else if (d_this->d_widget->inherits ("QGroupBox"))
 			((QGroupBox *) d_this->d_widget)->setTitle (label);
 		else
-			d_this->d_widget->setCaption (label);
+                        d_this->d_widget->setWindowTitle (label);
 	}
 }
 
@@ -247,19 +253,22 @@ mxWidget::getLabel () const
 {
 	if (d_this->d_widget)
 	{
-		if (d_this->d_widget->inherits ("QButton"))
-			return ((QButton *) d_this->d_widget)->text ();
+		if (d_this->d_widget->inherits ("QPushButton"))
+			return qPrintable(((QPushButton *) d_this->d_widget)->text ());
+		else if (d_this->d_widget->inherits ("QCheckBox"))
+			return qPrintable(((QCheckBox *) d_this->d_widget)->text ());
+		else if (d_this->d_widget->inherits ("QRadioButton"))
+			return qPrintable(((QRadioButton *) d_this->d_widget)->text ());
 		else if (d_this->d_widget->inherits ("QLineEdit"))
-			return ((QLineEdit *) d_this->d_widget)->text ();
+			return qPrintable(((QLineEdit *) d_this->d_widget)->text ());
 		else if (d_this->d_widget->inherits ("QLabel"))
-			return ((QLabel *) d_this->d_widget)->text ();
+			return qPrintable(((QLabel *) d_this->d_widget)->text ());
 		else if (d_this->d_widget->inherits ("QGroupBox"))
-			return ((QGroupBox *) d_this->d_widget)->title ();
+			return qPrintable(((QGroupBox *) d_this->d_widget)->title ());
 		else
-			return d_this->d_widget->caption ();
+                        return qPrintable(d_this->d_widget->windowTitle ());
 	}
-	else
-		return 0;
+	return "";
 }
 
 

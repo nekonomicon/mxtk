@@ -13,9 +13,8 @@
 //
 #include <mx/mxRadioButton.h>
 #include <mx/mxWindow.h>
-#include <qradiobutton.h>
-#include <qbuttongroup.h>
-//#include <ostream.h>
+#include <QRadioButton>
+#include <QButtonGroup>
 
 
 
@@ -40,14 +39,14 @@ public:
 		}
 
 		if (s_buttonGroup)
-			s_buttonGroup->insert (this);
+			s_buttonGroup->addButton (this);
 	}
 
 	~mxRadioButton_i ()
 	{
 		if (d_buttonGroup)
 		{
-			d_buttonGroup->remove (this);
+			d_buttonGroup->removeButton (this);
 		}
 	}
 

@@ -13,20 +13,19 @@
 //
 #include <mx/mxPopupMenu.h>
 #include <mx/mxWindow.h>
-#include <qpopupmenu.h>
-//#include <ostream.h>
+#include <QMenu>
 
 
 
-class mxPopupMenu_i : public QPopupMenu
+class mxPopupMenu_i : public QMenu
 {
 	Q_OBJECT
 	mxPopupMenu *d_widget;
 
 public:
-	int d_lastItemId ;
-
-	mxPopupMenu_i (mxPopupMenu *popupMenu) : QPopupMenu ()
+	QMap <int, QAction*> d_actionList;
+	int d_lastItemId;
+	mxPopupMenu_i (mxPopupMenu *popupMenu) : QMenu ()
 	{
 		d_widget = popupMenu;
 		d_lastItemId = -1;
@@ -37,8 +36,8 @@ public:
 	}
 
 public slots:
-	void activatedEvent (int itemId)
+	void activatedEvent (QAction *action)
 	{
-		d_lastItemId = itemId;
+		d_lastItemId = d_actionList.key(action);
 	}
 };
