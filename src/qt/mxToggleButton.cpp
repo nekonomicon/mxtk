@@ -2,7 +2,7 @@
 //                 mxToolKit (c) 1999 by Mete Ciragan
 //
 // file:           mxToggleButton.cpp
-// implementation: Win32 API
+// implementation: Qt Free Edition
 // last modified:  Apr 28 1999, Mete Ciragan
 // copyright:      The programs and associated files contained in this
 //                 distribution were developed by Mete Ciragan. The programs
@@ -11,27 +11,35 @@
 //                 provided without guarantee or warrantee expressed or
 //                 implied.
 //
-#include <mx/mxToggleButton.h>
-#include <mx/mxWindow.h>
-
-
-class mxToggleButton_i
-{
-public:
-	int dummy;
-};
+#include "mxToggleButton_i.h"
 
 
 
 mxToggleButton::mxToggleButton (mxWindow *parent, int x, int y, int w, int h, const char *label, int id)
 : mxWidget (parent, x, y, w, h, label)
 {
+	QWidget *p = 0;
+	if (parent)
+		p = (QWidget *) parent->getHandle ();
+
+	d_this = new mxToggleButton_i (p, this);
+	d_this->connect (d_this, SIGNAL (clicked ()), d_this, SLOT (clickedEvent ()));
+	d_this->setCheckable(true);
+	setHandle ((void *) d_this);
+	setType (MX_TOGGLEBUTTON);
+	setParent (parent);
+	
+	setLabel (label);
+	setBounds (x, y, w, h);
+	setId (id);
+	setVisible (true);
 }
 
 
 
 mxToggleButton::~mxToggleButton ()
 {
+	delete d_this;
 }
 
 
@@ -39,7 +47,7 @@ mxToggleButton::~mxToggleButton ()
 void
 mxToggleButton::setChecked (bool b)
 {
-	(void)0;
+	d_this->setChecked(b);
 }
 
 
@@ -47,5 +55,5 @@ mxToggleButton::setChecked (bool b)
 bool
 mxToggleButton::isChecked () const
 {
-	return false;
+	return d_this->isChecked();
 }
