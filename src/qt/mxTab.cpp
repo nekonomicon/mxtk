@@ -14,9 +14,8 @@
 #include <mx/mxTab.h>
 #include <mx/mxWindow.h>
 #include <QTabWidget>
-#include <QDialog>
-#include <QDialogButtonBox>
-#include <QVBoxLayout>
+
+
 
 class mxTab_i : public QTabWidget
 {
