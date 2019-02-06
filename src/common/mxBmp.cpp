@@ -40,7 +40,7 @@ mxBmpRead (const char *filename)
 	mxBitmapRGBQuad rgrgbPalette[256];
 	int cbBmpBits;
 	byte *pbBmpBits;
-	byte *pb, *pbPal = 0;
+	byte *pb, *pbHold;
 	int cbPalBytes;
 	int biTrueWidth;
 	mxImage *image = 0;
@@ -118,17 +118,18 @@ mxBmpRead (const char *filename)
 
 	// Read bitmap bits (remainder of file)
 	cbBmpBits = bmfh.bfSize - ftell (pfile);
-	pb = (byte *) malloc (cbBmpBits * sizeof (byte));
+
+	pbHold = pb = (byte *) malloc (cbBmpBits * sizeof (byte));
 	if (pb == 0)
 	{
-		free (pbPal);
+		delete image;
 		goto GetOut;
 	}
 
 	if (fread (pb, cbBmpBits, 1/*count*/, pfile) != 1)
 	{
-		free (pb);
-		free (pbPal);
+		free (pbHold);
+		delete image;
 		goto GetOut;
 	}
 /*
@@ -144,19 +145,20 @@ mxBmpRead (const char *filename)
 
 	// data is actually stored with the width being rounded up to a multiple of 4
 	biTrueWidth = (bmih.biWidth + 3) & ~3;
-	
+
 	// reverse the order of the data.
 	pb += (bmih.biHeight - 1) * biTrueWidth;
 	for(i = 0; i < bmih.biHeight; i++)
 	{
-		memmove (&pbBmpBits[biTrueWidth * i], pb, biTrueWidth);
+		memmove (&pbBmpBits[bmih.biWidth * i], pb, bmih.biWidth);
 		pb -= biTrueWidth;
 	}
 
-	pb += biTrueWidth;
-	free (pb);
+	//pb += biTrueWidth;
+	free (pbHold);
 
 GetOut:
+
 	if (pfile) 
 		fclose (pfile);
 
@@ -175,7 +177,7 @@ mxBmpWrite (const char *filename, mxImage *image)
 	mxBitmapRGBQuad rgrgbPalette[256];
 	int cbBmpBits;
 	byte *pbBmpBits;
-	byte *pb, *pbPal = 0;
+	byte *pb;
 	int cbPalBytes;
 	int biTrueWidth;
 
