@@ -50,7 +50,7 @@ style)
 	else if (style & MX_MB_WARNING)
 		ret = QMessageBox::warning (p, title, msg, b1, b2, b3);
 	else if (style & MX_MB_QUESTION)
-		ret = QMessageBox::information (p, title, msg, b1, b2, b3);
+		ret = QMessageBox::question (p, title, msg, b1, b2, b3);
 
 	switch (ret)
 	{
