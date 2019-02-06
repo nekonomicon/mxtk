@@ -55,9 +55,9 @@ mxGlWindow::handleEvent (mxEvent *event)
 void
 mxGlWindow::redraw ()
 {
-	d_this->makeCurrent ();
+	makeCurrent ();
 	draw ();
-	d_this->swapBuffers ();
+	swapBuffers ();
 }
 
 
@@ -81,7 +81,7 @@ mxGlWindow::makeCurrent ()
 int
 mxGlWindow::swapBuffers ()
 {
-	d_this->swapBuffers ();
+	d_this->context()->swapBuffers(d_this->context()->surface());
 	return 1;
 }
 

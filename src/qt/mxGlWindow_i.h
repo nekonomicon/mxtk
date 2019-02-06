@@ -13,12 +13,13 @@
 //
 #include <mx/mxGlWindow.h>
 #include <mx/mx.h>
-#include <QGL>
+#include <QOpenGLWidget>
+#include <QOpenGLContext>
 #include <QMouseEvent>
 
 
 
-class mxGlWindow_i : public QGLWidget
+class mxGlWindow_i : public QOpenGLWidget
 {
 	Q_OBJECT
 	mxGlWindow *d_GlWindow;
@@ -27,7 +28,7 @@ class mxGlWindow_i : public QGLWidget
 
 public:
 
-	mxGlWindow_i (QWidget *parent, mxGlWindow *GlWindow) : QGLWidget (parent)
+	mxGlWindow_i (QWidget *parent, mxGlWindow *GlWindow) : QOpenGLWidget (parent)
 	{
 		d_GlWindow = GlWindow;
 		d_dragging = false;
@@ -46,6 +47,7 @@ public slots:
 		
 		event.event = mxEvent::Idle;
 		d_GlWindow->handleEvent (&event);
+		update();
 	}
 	
 protected:
@@ -65,7 +67,7 @@ protected:
 
 	virtual void mousePressEvent (QMouseEvent *e)
 	{
-		QGLWidget::mousePressEvent (e);
+		QOpenGLWidget::mousePressEvent (e);
 		d_dragging = true;
 		
 		d_button = 0;
@@ -90,7 +92,7 @@ protected:
 
 	virtual void mouseMoveEvent (QMouseEvent *e)
 	{
-		QGLWidget::mouseMoveEvent (e);
+		QOpenGLWidget::mouseMoveEvent (e);
 		
 		d_button = 0;
 		if (e->buttons () & Qt::LeftButton)
@@ -120,7 +122,7 @@ protected:
 
 	virtual void mouseReleaseEvent (QMouseEvent *e)
 	{
-		QGLWidget::mouseReleaseEvent (e);
+		QOpenGLWidget::mouseReleaseEvent (e);
 		d_dragging = false;
 
 		d_button = 0;
