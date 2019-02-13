@@ -91,4 +91,5 @@ mxWindow::setTimer (int milliSeconds)
 void
 mxWindow::setMenuBar (mxMenuBar *menuBar)
 {
+	d_this->setMenuBar ((QMenuBar *) menuBar->getHandle ());
 }
