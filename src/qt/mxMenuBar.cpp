@@ -35,7 +35,7 @@ mxMenuBar::mxMenuBar (mxWindow *parent)
 
 mxMenuBar::~mxMenuBar ()
 {
-	g_actionList.clear();
+	g_actionList.clear ();
 	delete d_this;
 }
 
@@ -45,7 +45,7 @@ void
 mxMenuBar::addMenu (const char *item, mxMenu *menu)
 {
 	QMenu *_menu = (QMenu *) ((mxWidget *) menu)->getHandle ();
-	_menu->setTitle(item);	
+	_menu->setTitle (item);
 	d_this->addMenu (_menu);
 }
 
@@ -54,7 +54,7 @@ mxMenuBar::addMenu (const char *item, mxMenu *menu)
 void
 mxMenuBar::setEnabled (int id, bool b)
 {
-	g_actionList[id]->setEnabled(b);
+	g_actionList[id]->setEnabled (b);
 }
 
 
@@ -62,7 +62,8 @@ mxMenuBar::setEnabled (int id, bool b)
 void
 mxMenuBar::setChecked (int id, bool b)
 {
-	g_actionList[id]->setChecked(b);
+	g_actionList[id]->setCheckable (true);
+	g_actionList[id]->setChecked (b);
 }
 
 
@@ -71,8 +72,8 @@ void
 mxMenuBar::modify (int id, int newId, const char *newItem)
 {
 	// probably, id will be always the same
-	QAction *action = g_actionList.value(id);
-	action->setText(newItem);
+	QAction *action = g_actionList.value (id);
+	action->setText (newItem);
 	// g_actionList[newId] = action;
 }
 
@@ -81,7 +82,7 @@ mxMenuBar::modify (int id, int newId, const char *newItem)
 bool
 mxMenuBar::isEnabled (int id) const
 {
-	return g_actionList[id]->isEnabled();
+	return g_actionList[id]->isEnabled ();
 }
 
 
@@ -89,7 +90,7 @@ mxMenuBar::isEnabled (int id) const
 bool
 mxMenuBar::isChecked (int id) const
 {
-	return g_actionList[id]->isChecked();
+	return g_actionList[id]->isChecked ();
 }
 
 

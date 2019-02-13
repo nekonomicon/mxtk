@@ -55,7 +55,6 @@ void
 mxMenu::add (const char *item, int id)
 {
 	g_actionList[id] = d_this->addAction (item);
-	g_actionList[id]->setCheckable (true);
 }
 
 
@@ -64,7 +63,7 @@ void
 mxMenu::addMenu (const char *item, mxMenu *menu)
 {
 	QMenu *_menu = (QMenu*)menu->getHandle ();
-	_menu->setTitle(item);
+	_menu->setTitle (item);
 	d_this->addMenu (_menu);
 }
 
@@ -89,6 +88,7 @@ mxMenu::setEnabled (int id, bool b)
 void
 mxMenu::setChecked (int id, bool b)
 {
+	g_actionList[id]->setCheckable (true);
 	g_actionList[id]->setChecked (b);
 }
 
@@ -97,7 +97,7 @@ mxMenu::setChecked (int id, bool b)
 bool
 mxMenu::isEnabled (int id) const
 {
-	return g_actionList[id]->isEnabled();
+	return g_actionList[id]->isEnabled ();
 }
 
 
@@ -105,5 +105,5 @@ mxMenu::isEnabled (int id) const
 bool
 mxMenu::isChecked (int id) const
 {
-	return g_actionList[id]->isChecked();
+	return g_actionList[id]->isChecked ();
 }
