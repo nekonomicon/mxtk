@@ -11,26 +11,7 @@
 //                 provided without guarantee or warrantee expressed or
 //                 implied.
 //
-#include <mx/mxTab.h>
-#include <mx/mxWindow.h>
-#include <QTabWidget>
-
-
-
-class mxTab_i : public QTabWidget
-{
-	mxTab *d_widget;
-	
-public:
-	mxTab_i (QWidget *parent, mxTab *widget) : QTabWidget (parent)
-	{
-		d_widget = widget;
-	}
-	
-	~mxTab_i ()
-	{
-	}
-};
+#include "mxTab_i.h"
 
 
 
@@ -42,7 +23,8 @@ mxTab::mxTab (mxWindow *parent, int x, int y, int w, int h, int id)
 		p = (QWidget *) parent->getHandle ();
 	
 	d_this = new mxTab_i (p, this);
-	
+	d_this->connect(d_this, SIGNAL(tabBarClicked(int)), d_this, SLOT(tabBarClickedEvent(int)));
+
 	setHandle ((void *) d_this);
 	setType (MX_TAB);
 	setParent (parent);
@@ -75,6 +57,8 @@ mxTab::add (mxWidget *widget, const char *text)
 void
 mxTab::remove (int index)
 {
+	d_this->removeTab (index);
+	d_this->select (d_this->currentIndex ());
 }
 
 
@@ -82,7 +66,8 @@ mxTab::remove (int index)
 void
 mxTab::select (int index)
 {
-	//d_this->setCurrentTab (index);
+	d_this->setCurrentIndex (index);
+	d_this->select (index);
 }
 
 
@@ -90,5 +75,5 @@ mxTab::select (int index)
 int
 mxTab::getSelectedIndex () const
 {
-	return 0;
+	return d_this->getSelectedIndex ();
 }
