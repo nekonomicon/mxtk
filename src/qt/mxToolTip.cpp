@@ -13,7 +13,7 @@
 //
 #include <mx/mxToolTip.h>
 #include <mx/mxWindow.h>
-
+#include <QWidget>
 
 
 void

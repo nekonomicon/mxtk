@@ -261,7 +261,8 @@ mxWindow::doModal ()
 				lIdleCount = 0;
 			}
 #endif
-		} while (PeekMessage(&msg, NULL, NULL, NULL, PM_NOREMOVE));
+		// } while (PeekMessage(&msg, NULL, NULL, NULL, PM_NOREMOVE));
+		} while (PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE));
 	}
 
 ExitModal:

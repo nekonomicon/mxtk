@@ -11,7 +11,7 @@
 //                 provided without guarantee or warrantee expressed or
 //                 implied.
 //
-#include <mx/mxstring.h>
+#include <mx/mxString.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -44,10 +44,12 @@ mx_strcasecmp (const char *s1, const char *s2)
 
 
 
-void
+char *
 mx_strlower (char *str)
 {
 	int i;
 	for (i = strlen (str) - 1; i >= 0; i--)
 		str[i] = tolower (str[i]);
+
+	return str;
 }

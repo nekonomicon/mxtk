@@ -11,7 +11,7 @@
 //                 provided without guarantee or warrantee expressed or
 //                 implied.
 //
-#include <mx/mxpath.h>
+#include <mx/mxPath.h>
 #ifdef WIN32
 #include <windows.h>
 #else

@@ -135,11 +135,11 @@
 #endif
 
 #ifndef INCLUDED_MXPATH
-#include <mx/mxpath.h>
+#include <mx/mxPath.h>
 #endif
 
 #ifndef INCLUDED_MXSTRING
-#include <mx/mxstring.h>
+#include <mx/mxString.h>
 #endif
 
 

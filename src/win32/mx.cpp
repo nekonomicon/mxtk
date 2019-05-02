@@ -20,7 +20,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-//#include <ostream.h>
 
 
 #define CLASSNAME "MXTK::CLASSNAME"
