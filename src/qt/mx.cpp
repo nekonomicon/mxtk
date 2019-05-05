@@ -26,6 +26,7 @@ mxWindow *d_mainWindow;
 mxLinkedList *d_widgetList;
 QTimer *d_timer;
 static char d_appPath[256];
+static int d_argc; // kludge for stupid bug in QCoreApplication::arguments()
 
 
 
@@ -53,7 +54,8 @@ mx::init (int argc, char *argv[])
 	if (ptr)
 		*ptr = '\0';
 		
-	d_Application = new QApplication (argc, argv);
+	d_argc = argc;
+	d_Application = new QApplication (d_argc, argv);
 	d_widgetList = new mxLinkedList ();
 	return 0;
 }
