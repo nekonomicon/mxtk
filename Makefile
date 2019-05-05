@@ -16,7 +16,7 @@ PLATFORM = win32
 STATIC_LIB_EXT = lib
 SHARED_LIB_EXT = dll
 
-LIBS = -lcomctl32 -lcomdlg32 -lgdi32 -lopengl32
+LIBS = -lcomctl32 -lcomdlg32 -lgdi32 -lopengl32 -static-libgcc -static-libstdc++
 else
 CFLAGS += -fPIC
 
@@ -28,7 +28,7 @@ SHARED_LIB_EXT = so
 MOC ?= moc
 
 MOC_HEADERS = $(wildcard src/$(PLATFORM)/*_i.h)
-MOC_PREFIX = $(subst $(PLATFORM)/,$(PLATFORM)/moc_,$(MOC_HEADERS));
+MOC_PREFIX = $(subst $(PLATFORM)/,$(PLATFORM)/moc_,$(MOC_HEADERS))
 MOC_SRC = $(MOC_PREFIX:%_i.h=%.cpp)
 MOC_OBJS = $(MOC_SRC:%.cpp=%.o)
 
@@ -69,7 +69,7 @@ moc_%.cpp: %_i.h
 # clean
 
 clean:
-	rm $(OBJS) $(MOC_OBJS)
+	$(RM) $(OBJS) $(MOC_OBJS)
 
 # install
 
