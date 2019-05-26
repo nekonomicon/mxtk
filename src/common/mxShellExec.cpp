@@ -11,6 +11,7 @@
 //                 provided without guarantee or warrantee expressed or
 //                 implied.
 //
+#include "mx/mxWindow.h"
 #include "mx/mxShellExec.h"
 #if defined(_WIN32)
 #include <shellapi.h>
@@ -32,6 +33,6 @@ mx_shellexec (mxWindow *parent, const char *path)
 	openProgram = "xdg-open";
 
 	if (!fork())
-		execlp(openProgram, openProgram, path, 0);
+		execlp(openProgram, openProgram, path, NULL);
 #endif
 }
