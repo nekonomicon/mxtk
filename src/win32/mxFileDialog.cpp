@@ -16,37 +16,49 @@
 #include <windows.h>
 #include <commdlg.h>
 #include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 
 
-static char sd_path[_MAX_PATH] = "";
+static char sd_path[_MAX_PATH];
 
 
 
 const char*
 mxGetOpenFileName (mxWindow *parent, const char *path, const char *filter)
 {
-	CHAR szPath[_MAX_PATH], szFilter[_MAX_PATH];
+	char szPath[_MAX_PATH] = {0}, szFilter[_MAX_PATH] = {0};
+	const char *pos;
+	size_t len, i = 0;
 
-	strcpy (sd_path, "");
+	sd_path[0] = '\0';
 
 	if (path)
 		strcpy (szPath, path);
-	else
-		strcpy (szPath, "");
 
 	if (filter)
 	{
-		memset (szFilter, 0, _MAX_PATH);
-		strcpy (szFilter, filter);
-		strcpy (szFilter + strlen (szFilter) + 1, filter);
+		while ((pos = strstr (filter, ";;")))
+		{
+			len = (pos - filter);
+			pos = strchr (filter, '.') - 1;
+			memcpy (&szFilter[i], filter, len);
+			i += len + 1;
+			filter += len + 2;
+			memcpy (&szFilter[i], pos, strchr (pos, ')') - pos);
+			i += 6;
+	
+		}
+		len = strlen (filter);
+                memcpy (&szFilter[i], filter, len);
+                i += len + 1;
+		pos = strchr (filter, '.') - 1;
+                memcpy (&szFilter[i], pos, strchr (pos, ')') - pos);
 	}
-	else
-		strcpy (szFilter, "");
 
+	OPENFILENAME ofn = {0};
 
-	OPENFILENAME ofn;
-	memset (&ofn, 0, sizeof (ofn));
 	ofn.lStructSize = sizeof (ofn);
 	if (parent)
 		ofn.hwndOwner = (HWND) parent->getHandle ();
@@ -59,9 +71,9 @@ mxGetOpenFileName (mxWindow *parent, const char *path, const char *filter)
 	ofn.Flags = OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_HIDEREADONLY;
 
 	if (GetOpenFileName (&ofn))
-			return sd_path;
-		else
-			return 0;
+		return sd_path;
+	else
+		return 0;
 }
 
 
@@ -69,26 +81,36 @@ mxGetOpenFileName (mxWindow *parent, const char *path, const char *filter)
 const char*
 mxGetSaveFileName (mxWindow *parent, const char *path, const char *filter)
 {
-	CHAR szPath[_MAX_PATH], szFilter[_MAX_PATH];
+	char szPath[_MAX_PATH] = {0}, szFilter[_MAX_PATH] = {0};
+	char *pos;
+        size_t len, i = 0;
 
-	strcpy (sd_path, "");
+	sd_path[0] = '\0';
 
 	if (path)
 		strcpy (szPath, path);
-	else
-		strcpy (szPath, "");
 
 	if (filter)
 	{
-		memset (szFilter, 0, _MAX_PATH);
-		strcpy (szFilter, filter);
-		strcpy (szFilter + strlen (szFilter) + 1, filter);
+		while ((pos = strstr (filter, ";;")))
+		{
+			len = (pos - filter);
+			pos = strchr (filter, '.') - 1;
+			memcpy (&szFilter[i], filter, len);
+			i += len + 1;
+			filter += len + 2;
+			memcpy (&szFilter[i], pos, strchr (pos, ')') - pos);
+			i += 6;
+		}
+		len = strlen(filter);
+		memcpy (&szFilter[i], filter, len);
+		i += len + 1;
+		pos = strchr (filter, '.') - 1;
+		memcpy (&szFilter[i], pos, strchr (pos, ')') - pos);
 	}
-	else
-		strcpy (szFilter, "");
 
-	OPENFILENAME ofn;
-	memset (&ofn, 0, sizeof (ofn));
+	OPENFILENAME ofn = {0};
+
 	ofn.lStructSize = sizeof (ofn);
 	if (parent)
 		ofn.hwndOwner = (HWND) parent->getHandle ();
@@ -101,7 +123,7 @@ mxGetSaveFileName (mxWindow *parent, const char *path, const char *filter)
 	ofn.Flags = OFN_OVERWRITEPROMPT | OFN_PATHMUSTEXIST | OFN_HIDEREADONLY;
 
 	if (GetSaveFileName (&ofn))
-			return sd_path;
-		else
-			return 0;
+		return sd_path;
+	else
+		return 0;
 }
