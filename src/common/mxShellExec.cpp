@@ -14,7 +14,7 @@
 #include "mx/mxWindow.h"
 #include "mx/mxShellExec.h"
 #if defined(_WIN32)
-#include <shellapi.h>
+#include <windows.h>
 #else
 #include <unistd.h>
 #endif

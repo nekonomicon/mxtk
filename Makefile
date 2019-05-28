@@ -16,7 +16,7 @@ PLATFORM = win32
 STATIC_LIB_EXT = lib
 SHARED_LIB_EXT = dll
 
-LIBS = -lcomctl32 -lcomdlg32 -lgdi32 -lopengl32 -static-libgcc -static-libstdc++
+LIBS = -lcomctl32 -lcomdlg32 -lgdi32 -lopengl32 -lwinmm -static-libgcc -static-libstdc++
 else
 CFLAGS += -fPIC
 
