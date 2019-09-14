@@ -17,7 +17,7 @@
 
 
 
-const char*
+const char *
 mxGetOpenFileName (mxWindow *parent, const char *path, const char *filter)
 {
 	QWidget *p = 0;
@@ -31,13 +31,13 @@ mxGetOpenFileName (mxWindow *parent, const char *path, const char *filter)
 		strcpy (filename, qPrintable (f));
 		return filename;
 	}
-	else
-		return 0;
+
+	return 0;
 }
 
 
 
-const char*
+const char *
 mxGetSaveFileName (mxWindow *parent, const char *path, const char *filter)
 {
 	QWidget *p = 0;
@@ -51,6 +51,26 @@ mxGetSaveFileName (mxWindow *parent, const char *path, const char *filter)
 		strcpy (filename, qPrintable (f));
 		return filename;
 	}
-	else
-		return 0;
+
+	return 0;
+}
+
+
+
+const char *
+mxGetFolderPath (mxWindow *parent, const char *path)
+{
+	QWidget *p = 0;
+	if (parent)
+		p = (QWidget *) parent->getHandle ();
+
+	static char filename[256];
+	QString f = QFileDialog::getExistingDirectory (p, "Pick a Folder", path);
+	if (!f.isEmpty () && !f.isNull ())
+	{
+		strcpy (filename, qPrintable (f));
+		return filename;
+	}
+
+	return 0;
 }

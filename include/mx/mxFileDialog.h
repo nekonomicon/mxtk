@@ -26,6 +26,7 @@ extern "C" {
 
 const char *mxGetOpenFileName (mxWindow *parent, const char *path, const char *filter);
 const char *mxGetSaveFileName (mxWindow *parent, const char *path, const char *filter);
+const char *mxGetFolderPath (mxWindow *parent, const char *path);
 
 #ifdef __cplusplus
 }

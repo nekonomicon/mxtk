@@ -15,6 +15,7 @@
 #include <mx/mxWindow.h>
 #include <windows.h>
 #include <commdlg.h>
+#include <shlobj.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -25,7 +26,7 @@ static char sd_path[_MAX_PATH];
 
 
 
-const char*
+const char *
 mxGetOpenFileName (mxWindow *parent, const char *path, const char *filter)
 {
 	char szPath[_MAX_PATH] = {0}, szFilter[_MAX_PATH] = {0};
@@ -72,13 +73,13 @@ mxGetOpenFileName (mxWindow *parent, const char *path, const char *filter)
 
 	if (GetOpenFileName (&ofn))
 		return sd_path;
-	else
-		return 0;
+
+	return 0;
 }
 
 
 
-const char*
+const char *
 mxGetSaveFileName (mxWindow *parent, const char *path, const char *filter)
 {
 	char szPath[_MAX_PATH] = {0}, szFilter[_MAX_PATH] = {0};
@@ -124,6 +125,65 @@ mxGetSaveFileName (mxWindow *parent, const char *path, const char *filter)
 
 	if (GetSaveFileName (&ofn))
 		return sd_path;
-	else
-		return 0;
+
+	return 0;
 }
+
+
+
+static int CALLBACK
+BrowseCallbackProc (HWND hwnd, UINT uMsg, LPARAM lParam, LPARAM lpData)
+{
+	switch (uMsg)
+	{
+	case BFFM_INITIALIZED:
+		if (lpData)
+			::SendMessage (hwnd, BFFM_SETSELECTION, TRUE, lpData);
+		break;
+	default:
+		break;
+	}
+
+	return 0; 
+}
+
+
+
+const char *
+mxGetFolderPath (mxWindow *parent, const char *path)
+{
+	LPMALLOC pMalloc = 0;
+	LPITEMIDLIST pidl;
+	char szPath[_MAX_PATH] = {0};
+	BROWSEINFOA bi = {0};
+
+	sd_path[0] = '\0';
+
+	if (parent)
+		bi.hwndOwner = (HWND) parent->getHandle ();
+
+	bi.pszDisplayName = (LPSTR) path;
+	bi.lpszTitle = "Pick a Folder";
+	bi.lpfn	= BrowseCallbackProc;
+	bi.lParam =  (long) path;
+
+	pidl = SHBrowseForFolderA (&bi);
+
+	if (pidl)
+	{
+		if (SHGetPathFromIDListA (pidl, szPath))
+			strcpy (sd_path, szPath);
+
+		if (SHGetMalloc (&pMalloc))
+		{
+			pMalloc->Free (pidl);
+			pMalloc->Release ();
+		}
+	}
+
+	if (sd_path[0] != '\0')
+		return sd_path;
+
+	return 0;
+}
+
