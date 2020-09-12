@@ -14,6 +14,7 @@
 #include <mx/mxPath.h>
 #ifdef WIN32
 #include <windows.h>
+#include <shlwapi.h>
 #else
 #include <unistd.h>
 #endif
@@ -80,6 +81,50 @@ mx_getextension (const char *filename)
 		strcpy (ext, "");
 #endif
 	return ext;
+}
+
+
+
+const char *
+mx_getfilename (const char *path)
+{
+	static char filename[256];
+#ifdef WIN32
+	strcpy(filename, path);
+	PathStripPathA(filename);
+#else
+	char *ptr = (char *)strrchr (path, '/');
+	if (ptr)
+		strcpy (filename, ptr + 1);
+	else
+		strcpy (filename, path);
+
+#endif
+	return filename;
+}
+
+
+
+const char *
+mx_getfilebase (const char *path)
+{
+	static char filename[256];
+#ifdef WIN32
+	_splitname (path, 0, 0, filename, 0);
+#else
+	char *ptr = (char *)strrchr (path, '/');
+	if (ptr)
+		strcpy (filename, ptr + 1);
+	else
+		strcpy (filename, path);
+
+	ptr = (char *)strrchr (filename, '.');
+
+	if (ptr)
+		*ptr = '\0';
+
+#endif
+        return filename;
 }
 
 

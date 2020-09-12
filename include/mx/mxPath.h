@@ -26,6 +26,9 @@ const char *mx_getcwd ();
 const char *mx_getpath (const char *filename);
 const char *mx_getextension (const char *filename);
 
+const char *mx_getfilename (const char *path);
+const char *mx_getfilebase (const char *path);
+
 const char *mx_gettemppath ();
 
 #ifdef __cplusplus
