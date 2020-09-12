@@ -718,6 +718,14 @@ mx::check ()
 
 
 void
+mx::sleep (unsigned int msec)
+{
+        Sleep (msec);
+}
+
+
+
+void
 mx::quit ()
 {
 	isClosing = true;

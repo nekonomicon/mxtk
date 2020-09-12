@@ -37,6 +37,7 @@ public:
 	static int init (int argc, char *argv[]);
 	static int run ();
 	static int check ();
+	static void sleep (unsigned int msec);
 	static void quit ();
 	static void cleanup ();
 	static void setEventWindow (mxWindow *window);

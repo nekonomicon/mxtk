@@ -18,7 +18,7 @@
 #include <QDesktopWidget>
 #include <QTimer>
 #include <time.h>
-
+#include <unistd.h>
 
 
 QApplication *d_Application;
@@ -75,6 +75,14 @@ mx::check ()
 {
 	d_Application->processEvents ();
 	return 0;
+}
+
+
+
+void
+mx::sleep (unsigned int msec)
+{
+	usleep (msec * 1000);
 }
 
 
