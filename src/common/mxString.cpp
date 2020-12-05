@@ -16,7 +16,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-
+#ifdef _WIN32
+#include <shlwapi.h>
+#endif
 
 
 int
@@ -43,7 +45,6 @@ mx_strcasecmp (const char *s1, const char *s2)
 
 
 
-
 char *
 mx_strlower (char *str)
 {
@@ -53,3 +54,55 @@ mx_strlower (char *str)
 
 	return str;
 }
+
+
+
+#ifdef _WIN32
+int
+mx_snprintf(char *buffer, int buffersize, const char *format, ...)
+{
+	va_list	args;
+	int	result;
+
+	va_start(args, format);
+	result = wvnsprintfA(buffer, buffersize, format, args);
+	va_end(args);
+
+	if (result < 0 || result >= buffersize)
+	{
+		buffer[buffersize - 1] = '\0';
+		return -1;
+	}
+
+	return result;
+}
+#endif
+
+
+
+char *
+mx_stristr(const char *string, const char *string2)
+{
+	int	c, len;
+
+	if (!string || !string2)
+		return NULL;
+
+	c = tolower(*string2);
+	len = strlen(string2);
+
+	while (string)
+	{
+		for (; *string && tolower(*string) != c; string++);
+
+		if (*string)
+		{
+			if (!mx_strncasecmp(string, string2, len))
+				break;
+			string++;
+		}
+		else return NULL;
+	}
+	return (char *)string;
+}
+

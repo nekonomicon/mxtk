@@ -25,6 +25,14 @@ int mx_strcasecmp (const char *s1, const char *s2);
 
 char *mx_strlower (char *str);
 
+#ifdef _WIN32
+int mx_snprintf(char *buffer, int buffersize, const char *format, ...);
+#else // _WIN32
+#define mx_snprintf	snprintf
+#endif
+
+char *mx_stristr(const char *string, const char *string2);
+
 #ifdef __cplusplus
 }
 #endif
