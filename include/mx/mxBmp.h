@@ -21,14 +21,11 @@
 #endif
 
 
-#ifdef WIN32
-#include <pshpack2.h>
-#endif
-
+#pragma pack( push, 1 )
 typedef struct
 {
 	word bfType; 
-    int bfSize;
+	int bfSize;
 	word bfReserved1; 
 	word bfReserved2;
 	int bfOffBits;
@@ -53,14 +50,10 @@ typedef struct
 {
 	byte rgbBlue;
 	byte rgbGreen; 
-    byte rgbRed;
+	byte rgbRed;
 	byte rgbReserved;
 } mxBitmapRGBQuad; 
-
-#ifdef WIN32
-#include <poppack.h>
-#endif
-
+#pragma pack( pop )
 
 
 #ifdef __cplusplus
