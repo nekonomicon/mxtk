@@ -167,10 +167,9 @@ GetOut:
 
 
 
-bool
-mxBmpWrite (const char *filename, mxImage *image)
+bool mxBmpWrite( const char *filename, mxImage *image )
 {
-	int i;
+	int i, x, y;
 	FILE *pfile = 0;
 	mxBitmapFileHeader bmfh;
 	mxBitmapInfoHeader bmih;
@@ -178,111 +177,133 @@ mxBmpWrite (const char *filename, mxImage *image)
 	int cbBmpBits;
 	byte *pbBmpBits;
 	byte *pb;
-	int cbPalBytes;
+	int cbPalBytes = 0;
 	int biTrueWidth;
+	int pixel_size;
 
-	if (!image || !image->data || !image->palette)
+	if( !image || !image->data )
 		return false;
 
 	// File exists?
-	if ((pfile = fopen(filename, "wb")) == 0)
+	if(( pfile = fopen( filename, "wb" )) == 0 )
 		return false;
 
+	if( image->bpp == 8 )
+		pixel_size = 1;
+	else if( image->bpp == 24 )
+		pixel_size = 3;
+	else if( image->bpp == 32 )
+		pixel_size = 4;
+	else return false;
+
 	biTrueWidth = ((image->width + 3) & ~3);
-	cbBmpBits = biTrueWidth * image->height;
-	cbPalBytes = 256 * sizeof (mxBitmapRGBQuad);
+	cbBmpBits = biTrueWidth * image->height * pixel_size;
+	if( pixel_size == 1 ) cbPalBytes = 256 * sizeof (mxBitmapRGBQuad);
 
 	// Bogus file header check
-	//bmfh.bfType = MAKEWORD( 'B', 'M' );
 	bmfh.bfType = (word) (('M' << 8) | 'B');
 	bmfh.bfSize = sizeof bmfh + sizeof bmih + cbBmpBits + cbPalBytes;
-	bmfh.bfReserved1 = 0;
-	bmfh.bfReserved2 = 0;
 	bmfh.bfOffBits = sizeof bmfh + sizeof bmih + cbPalBytes;
+	bmfh.bfReserved1 = bmfh.bfReserved2 = 0;
 
-	// Write file header
-	if (fwrite (&bmfh, sizeof bmfh, 1/*count*/, pfile) != 1)
+	// write file header
+	if( fwrite( &bmfh, sizeof bmfh, 1, pfile ) != 1 )
 	{
-		fclose (pfile);
+		fclose( pfile );
 		return false;
 	}
 
-	// Size of structure
 	bmih.biSize = sizeof bmih;
-	// Width
 	bmih.biWidth = biTrueWidth;
-	// Height
 	bmih.biHeight = image->height;
-	// Only 1 plane 
 	bmih.biPlanes = 1;
-	// Only 8-bit supported.
-	bmih.biBitCount = 8;
-	// Only non-compressed supported.
+	bmih.biBitCount = pixel_size * 8;
 	bmih.biCompression = 0; //BI_RGB;
-	bmih.biSizeImage = 0;
-
-	// huh?
+	bmih.biSizeImage = cbBmpBits;
 	bmih.biXPelsPerMeter = 0;
 	bmih.biYPelsPerMeter = 0;
-
-	// Always full palette
-	bmih.biClrUsed = 256;
+	bmih.biClrUsed = ( pixel_size == 1 ) ? 256 : 0;
 	bmih.biClrImportant = 0;
 	
 	// Write info header
-	if (fwrite (&bmih, sizeof bmih, 1/*count*/, pfile) != 1)
-	{
-		fclose (pfile);
-		return false;
-	}
-	
-
-	// convert to expanded palette
-	pb = (byte *) image->palette;
-
-	// Copy over used entries
-	for (i = 0; i < (int) bmih.biClrUsed; i++)
-	{
-		rgrgbPalette[i].rgbRed   = *pb++;
-		rgrgbPalette[i].rgbGreen = *pb++;
-		rgrgbPalette[i].rgbBlue  = *pb++;
-        rgrgbPalette[i].rgbReserved = 0;
-	}
-
-	// Write palette (bmih.biClrUsed entries)
-	cbPalBytes = bmih.biClrUsed * sizeof (mxBitmapRGBQuad);
-	if (fwrite (rgrgbPalette, cbPalBytes, 1/*count*/, pfile) != 1)
+	if( fwrite( &bmih, sizeof bmih, 1, pfile ) != 1 )
 	{
 		fclose (pfile);
 		return false;
 	}
 
-	pbBmpBits = (byte *) malloc (cbBmpBits * sizeof (byte));
-	if (!pbBmpBits)
+	if( pixel_size == 1 )
 	{
-		fclose (pfile);
+		// convert to expanded palette
+		pb = (byte *)image->palette;
+
+		// Copy over used entries
+		for (i = 0; i < (int) bmih.biClrUsed; i++)
+		{
+			rgrgbPalette[i].rgbRed   = *pb++;
+			rgrgbPalette[i].rgbGreen = *pb++;
+			rgrgbPalette[i].rgbBlue  = *pb++;
+			rgrgbPalette[i].rgbReserved = 0;
+		}
+
+		// Write palette (bmih.biClrUsed entries)
+		cbPalBytes = bmih.biClrUsed * sizeof (mxBitmapRGBQuad);
+
+		if( fwrite( rgrgbPalette, cbPalBytes, 1, pfile ) != 1 )
+		{
+			fclose (pfile);
+			return false;
+		}
+	}
+
+	pbBmpBits = (byte *)malloc( cbBmpBits * sizeof( byte ));
+
+	if( !pbBmpBits )
+	{
+		fclose( pfile );
 		return false;
 	}
 
-	pb = (byte *) image->data;
-	// reverse the order of the data.
-	pb += (image->height - 1) * image->width;
-	for(i = 0; i < bmih.biHeight; i++)
+	pb = (byte *)image->data;
+
+	for( y = 0; y < bmih.biHeight; y++ )
 	{
-		memmove (&pbBmpBits[biTrueWidth * i], pb, image->width);
-		pb -= image->width;
+		i = (bmih.biHeight - 1 - y ) * (bmih.biWidth);
+
+		for( x = 0; x < image->width; x++ )
+		{
+			if( pixel_size == 1 )
+			{
+				// 8-bit
+				pbBmpBits[i] = pb[x];
+			}
+			else
+			{
+				// 24 bit
+				pbBmpBits[i*pixel_size+0] = pb[x*pixel_size+2];
+				pbBmpBits[i*pixel_size+1] = pb[x*pixel_size+1];
+				pbBmpBits[i*pixel_size+2] = pb[x*pixel_size+0];
+			}
+
+			if( pixel_size == 4 ) // write alpha channel
+				pbBmpBits[i*pixel_size+3] = pb[x*pixel_size+3];
+			i++;
+		}
+
+		pb += image->width * pixel_size;
 	}
 
 	// Write bitmap bits (remainder of file)
-	if (fwrite (pbBmpBits, cbBmpBits, 1/*count*/, pfile) != 1)
+	if( fwrite( pbBmpBits, cbBmpBits, 1, pfile ) != 1 )
 	{
-		free (pbBmpBits);
-		fclose (pfile);
+		free( pbBmpBits );
+		fclose( pfile );
 		return false;
 	}
 
-	free (pbBmpBits);
-	fclose (pfile);
+	free( pbBmpBits );
+	fclose( pfile );
 
 	return true;
 }
+
