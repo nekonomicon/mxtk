@@ -110,7 +110,7 @@ mx_getfilebase (const char *path)
 {
 	static char filename[256];
 #ifdef WIN32
-	_splitname (path, 0, 0, filename, 0);
+	_splitpath (path, 0, 0, filename, 0);
 #else
 	char *ptr = (char *)strrchr (path, '/');
 	if (ptr)
