@@ -102,6 +102,38 @@ public:
 		width = height = bpp = 0;
 	}
 
+	bool flip_vertical( void )
+	{
+		if( bpp != 24 && bpp != 32 )
+			return false;
+
+		int pixel_size = bpp / 8;
+		size_t img_size = width * height * pixel_size;
+		unsigned char *buffer = (unsigned char *)malloc ( img_size );
+		unsigned char *out = buffer, *src = (unsigned char *)data;
+
+		// swap rgba to bgra and flip upside down
+		for( int y = height - 1; y >= 0; y-- )
+		{
+			unsigned char *in = src + y * width * pixel_size;
+			unsigned char *bufend = in + width * pixel_size;
+
+			for( ; in < bufend; in += pixel_size )
+			{
+				*out++ = in[0];
+				*out++ = in[1];
+				*out++ = in[2];
+				if( pixel_size == 4 )
+					*out++ = in[3];
+			}
+		}
+
+		// swap buffers
+		free( data );
+		data = buffer;
+
+		return true;
+	}
 private:
 	// NOT IMPLEMENTED
 	mxImage (const mxImage&);
