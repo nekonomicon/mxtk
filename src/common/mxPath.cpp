@@ -54,8 +54,12 @@ const char *
 mx_getpath (const char *filename)
 {
 	static char path[256];
+	char drive[64];
+	char tmp[256];
 #ifdef WIN32
-	_splitpath (filename, 0, path, 0, 0);
+	_splitpath (filename, drive, tmp, 0, 0);
+	strcpy(path, drive);
+	strcat(path, tmp);
 #else
 	strcpy (path, filename);
 	char *ptr = (char *)strrchr (path, '/');
