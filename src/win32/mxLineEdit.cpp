@@ -32,7 +32,7 @@ static LRESULT CALLBACK mxLineEdit_WindowProc(
   LPARAM lParam   // second message parameter
 )
 {
-	mxLineEdit *pEdit = (mxLineEdit *) GetWindowLong(hwnd, GWL_USERDATA);
+	mxLineEdit *pEdit = (mxLineEdit *) GetWindowLongPtr(hwnd, GWLP_USERDATA);
 	if (uMsg == WM_CHAR)
 	{
 		if (wParam == 13)
@@ -63,14 +63,14 @@ mxLineEdit::mxLineEdit (mxWindow *parent, int x, int y, int w, int h, const char
 	
 	SendMessage ((HWND) handle, WM_SETFONT, (WPARAM) (HFONT) GetStockObject (ANSI_VAR_FONT), MAKELPARAM (TRUE, 0));
 	SendMessage ((HWND) handle, EM_LIMITTEXT, (WPARAM) 256, 0L);
-	SetWindowLong ((HWND) handle, GWL_USERDATA, (LONG) this);
+	SetWindowLongPtr ((HWND) handle, GWLP_USERDATA, (LONG_PTR) this);
 
 	setHandle (handle);
 	setType (MX_LINEEDIT);
 	setParent (parent);
 	setId (id);
 
-	//d_this->wndProc = (WNDPROC) ::SetWindowLong((HWND) handle, GWL_WNDPROC, (DWORD) mxLineEdit_WindowProc);
+	//d_this->wndProc = (WNDPROC) ::SetWindowLongPtr((HWND) handle, GWL_WNDPROC, (DWORD) mxLineEdit_WindowProc);
 	parent->addWidget (this);
 }
 

@@ -151,7 +151,7 @@ mxWidget::setId (int id)
 {
 	if (::IsWindow(d_this->d_hwnd))
 	{
-		SetWindowLong (d_this->d_hwnd, GWL_ID, (LONG) id);
+		SetWindowLongPtr (d_this->d_hwnd, GWL_ID, (LONG_PTR) id);
 	}
 }
 
@@ -278,7 +278,7 @@ mxWidget::isEnabled () const
 int
 mxWidget::getId () const
 {
-	return (int) GetWindowLong (d_this->d_hwnd, GWL_ID);
+	return (int) GetWindowLongPtr (d_this->d_hwnd, GWL_ID);
 }
 
 

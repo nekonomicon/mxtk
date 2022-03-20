@@ -72,7 +72,7 @@ mxWindow::mxWindow (mxWindow *parent, int x, int y, int w, int h, const char *la
 					x, y, w, h, (HWND) parentHandle,
 					(HMENU) NULL, (HINSTANCE) GetModuleHandle (NULL), NULL);
 
-	SetWindowLong ((HWND) handle, GWL_USERDATA, (LONG) this);
+	SetWindowLongPtr ((HWND) handle, GWLP_USERDATA, (LONG_PTR) this);
 
 	setHandle (handle);
 	setType (MX_WINDOW);
@@ -111,7 +111,7 @@ mxWindow::~mxWindow ()
 	}
 	d_this->d_widgetList.clear();
 
-	SetWindowLong ((HWND) getHandle (), GWL_USERDATA, (LONG) 0);
+	SetWindowLongPtr ((HWND) getHandle (), GWLP_USERDATA, (LONG_PTR) 0);
 	delete d_this;
 }
 
@@ -126,9 +126,9 @@ mxWindow::addWidget (mxWidget *widget)
 		HWND hWnd = (HWND) widget->getHandle ();
 		if (::IsWindow(hWnd))
 		{
-			LONG l = GetWindowLong (hWnd, GWL_STYLE);
+			LONG l = GetWindowLongPtr (hWnd, GWL_STYLE);
 			l |= WS_GROUP;
-			SetWindowLong (hWnd, GWL_STYLE, l);
+			SetWindowLongPtr (hWnd, GWL_STYLE, l);
 		}
 	}
 	//MC: d_widgetList->add (widget);

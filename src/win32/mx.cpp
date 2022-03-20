@@ -72,7 +72,7 @@ static LRESULT CALLBACK WndProc (HWND hwnd, UINT uMessage, WPARAM wParam, LPARAM
 		if (isClosing)
 			break;
 
-		mxWindow *window = (mxWindow *) GetWindowLong (hwnd, GWL_USERDATA);
+		mxWindow *window = (mxWindow *) GetWindowLongPtr (hwnd, GWLP_USERDATA);
 		if (LOWORD (wParam) > 0 && window)
 		{
 			WORD wNotifyCode = (WORD) HIWORD (wParam);
@@ -102,7 +102,7 @@ static LRESULT CALLBACK WndProc (HWND hwnd, UINT uMessage, WPARAM wParam, LPARAM
 
 			event.event = mxEvent::Action;
 			if (::IsWindow(hwndCtrl))
-				event.widget = (mxWidget *) GetWindowLong (hwndCtrl, GWL_USERDATA);
+				event.widget = (mxWidget *) GetWindowLongPtr (hwndCtrl, GWLP_USERDATA);
 			else
 				event.widget = NULL;
 			event.action = (int) LOWORD (wParam);
@@ -129,9 +129,9 @@ static LRESULT CALLBACK WndProc (HWND hwnd, UINT uMessage, WPARAM wParam, LPARAM
 		{
 			if (nmhdr->idFrom > 0)
 			{
-				mxWindow *window = (mxWindow *) GetWindowLong (hwnd, GWL_USERDATA);
+				mxWindow *window = (mxWindow *) GetWindowLongPtr (hwnd, GWLP_USERDATA);
 				event.event = mxEvent::Action;
-				event.widget = (mxWidget *) GetWindowLong (nmhdr->hwndFrom, GWL_USERDATA);
+				event.widget = (mxWidget *) GetWindowLongPtr (nmhdr->hwndFrom, GWLP_USERDATA);
 				event.action = (int) nmhdr->idFrom;
 
 				RECT rc;
@@ -153,9 +153,9 @@ static LRESULT CALLBACK WndProc (HWND hwnd, UINT uMessage, WPARAM wParam, LPARAM
 		{
 			if (nmhdr->idFrom > 0)
 			{
-				mxWindow *window = (mxWindow *) GetWindowLong (hwnd, GWL_USERDATA);
+				mxWindow *window = (mxWindow *) GetWindowLongPtr (hwnd, GWLP_USERDATA);
 				event.event = mxEvent::Action;
-				event.widget = (mxWidget *) GetWindowLong (nmhdr->hwndFrom, GWL_USERDATA);
+				event.widget = (mxWidget *) GetWindowLongPtr (nmhdr->hwndFrom, GWLP_USERDATA);
 				event.action = (int) nmhdr->idFrom;
 				event.flags = mxEvent::RightClicked;
 
@@ -181,9 +181,9 @@ static LRESULT CALLBACK WndProc (HWND hwnd, UINT uMessage, WPARAM wParam, LPARAM
 		{
 			if (nmhdr->idFrom > 0)
 			{
-				mxWindow *window = (mxWindow *) GetWindowLong (hwnd, GWL_USERDATA);
+				mxWindow *window = (mxWindow *) GetWindowLongPtr (hwnd, GWLP_USERDATA);
 				event.event = mxEvent::Action;
-				event.widget = (mxWidget *) GetWindowLong (nmhdr->hwndFrom, GWL_USERDATA);
+				event.widget = (mxWidget *) GetWindowLongPtr (nmhdr->hwndFrom, GWLP_USERDATA);
 				event.action = (int) nmhdr->idFrom;
 				event.flags = mxEvent::DoubleClicked;
 
@@ -226,9 +226,9 @@ static LRESULT CALLBACK WndProc (HWND hwnd, UINT uMessage, WPARAM wParam, LPARAM
 			mxTab_resizeChild (nmhdr->hwndFrom);
 			if (nmhdr->idFrom > 0)
 			{
-				mxWindow *window = (mxWindow *) GetWindowLong (hwnd, GWL_USERDATA);
+				mxWindow *window = (mxWindow *) GetWindowLongPtr (hwnd, GWLP_USERDATA);
 				event.event = mxEvent::Action;
-				event.widget = (mxWidget *) GetWindowLong (nmhdr->hwndFrom, GWL_USERDATA);
+				event.widget = (mxWidget *) GetWindowLongPtr (nmhdr->hwndFrom, GWLP_USERDATA);
 				event.action = (int) nmhdr->idFrom;
 				while  (window)
 				{
@@ -249,7 +249,7 @@ static LRESULT CALLBACK WndProc (HWND hwnd, UINT uMessage, WPARAM wParam, LPARAM
 
 		mxEvent event;
 
-		mxWindow *window = (mxWindow *) GetWindowLong (hwnd, GWL_USERDATA);
+		mxWindow *window = (mxWindow *) GetWindowLongPtr (hwnd, GWLP_USERDATA);
 		if (window)
 		{
 			event.event = mxEvent::Size;
@@ -265,7 +265,7 @@ static LRESULT CALLBACK WndProc (HWND hwnd, UINT uMessage, WPARAM wParam, LPARAM
 		if (isClosing)
 			break;
 
-		mxWindow *window = (mxWindow *) GetWindowLong (hwnd, GWL_USERDATA);
+		mxWindow *window = (mxWindow *) GetWindowLongPtr (hwnd, GWLP_USERDATA);
 		if (window)
 		{
 			if (window->getType () == MX_GLWINDOW)
@@ -285,7 +285,7 @@ static LRESULT CALLBACK WndProc (HWND hwnd, UINT uMessage, WPARAM wParam, LPARAM
 		case TB_ENDTRACK:
 		case TB_THUMBTRACK:
 		{
-			mxWidget *widget = (mxWidget *) GetWindowLong ((HWND) lParam, GWL_USERDATA);
+			mxWidget *widget = (mxWidget *) GetWindowLongPtr ((HWND) lParam, GWLP_USERDATA);
 			mxEvent event;
 
 			if (!widget)
@@ -317,7 +317,7 @@ static LRESULT CALLBACK WndProc (HWND hwnd, UINT uMessage, WPARAM wParam, LPARAM
 		PAINTSTRUCT ps;
 		HDC hDC = BeginPaint (hwnd, &ps);
 
-		mxWindow *window = (mxWindow *) GetWindowLong (hwnd, GWL_USERDATA);
+		mxWindow *window = (mxWindow *) GetWindowLongPtr (hwnd, GWLP_USERDATA);
 		if (window)
 		{
 			window->redraw ();
@@ -333,7 +333,7 @@ static LRESULT CALLBACK WndProc (HWND hwnd, UINT uMessage, WPARAM wParam, LPARAM
 	{
 		bDragging = TRUE;
 		SetCapture (hwnd);
-		mxWindow *window = (mxWindow *) GetWindowLong (hwnd, GWL_USERDATA);
+		mxWindow *window = (mxWindow *) GetWindowLongPtr (hwnd, GWLP_USERDATA);
 
 		if (window)
 		{
@@ -375,7 +375,7 @@ static LRESULT CALLBACK WndProc (HWND hwnd, UINT uMessage, WPARAM wParam, LPARAM
 	case WM_MBUTTONUP:
 	case WM_RBUTTONUP:
 	{
-		mxWindow *window = (mxWindow *) GetWindowLong (hwnd, GWL_USERDATA);
+		mxWindow *window = (mxWindow *) GetWindowLongPtr (hwnd, GWLP_USERDATA);
 		if (window)
 		{
 			mxEvent event;
@@ -416,7 +416,7 @@ static LRESULT CALLBACK WndProc (HWND hwnd, UINT uMessage, WPARAM wParam, LPARAM
 
 	case WM_MOUSEMOVE:
 	{
-		mxWindow *window = (mxWindow *) GetWindowLong (hwnd, GWL_USERDATA);
+		mxWindow *window = (mxWindow *) GetWindowLongPtr (hwnd, GWLP_USERDATA);
 		if (window)
 		{
 			mxEvent event;
@@ -456,7 +456,7 @@ static LRESULT CALLBACK WndProc (HWND hwnd, UINT uMessage, WPARAM wParam, LPARAM
 
 	case 0x020A://WM_MOUSEWHEEL:
 	{
-		mxWindow *window = (mxWindow *) GetWindowLong (hwnd, GWL_USERDATA);
+		mxWindow *window = (mxWindow *) GetWindowLongPtr (hwnd, GWLP_USERDATA);
 		if (window)
 		{
 			mxEvent event;
@@ -496,7 +496,7 @@ static LRESULT CALLBACK WndProc (HWND hwnd, UINT uMessage, WPARAM wParam, LPARAM
 
 	case WM_KEYDOWN:
 	{
-		mxWindow *window = (mxWindow *) GetWindowLong (hwnd, GWL_USERDATA);
+		mxWindow *window = (mxWindow *) GetWindowLongPtr (hwnd, GWLP_USERDATA);
 		if (window)
 		{
 			mxEvent event;
@@ -509,7 +509,7 @@ static LRESULT CALLBACK WndProc (HWND hwnd, UINT uMessage, WPARAM wParam, LPARAM
 
 	case WM_CHAR:
 	{
-		mxWindow *window = (mxWindow *) GetWindowLong (hwnd, GWL_USERDATA);
+		mxWindow *window = (mxWindow *) GetWindowLongPtr (hwnd, GWLP_USERDATA);
 		if (window)
 		{
 			mxEvent event;
@@ -522,7 +522,7 @@ static LRESULT CALLBACK WndProc (HWND hwnd, UINT uMessage, WPARAM wParam, LPARAM
 
 	case WM_KEYUP:
 	{
-		mxWindow *window = (mxWindow *) GetWindowLong (hwnd, GWL_USERDATA);
+		mxWindow *window = (mxWindow *) GetWindowLongPtr (hwnd, GWLP_USERDATA);
 		if (window)
 		{
 			mxEvent event;
@@ -538,7 +538,7 @@ static LRESULT CALLBACK WndProc (HWND hwnd, UINT uMessage, WPARAM wParam, LPARAM
 		if (isClosing)
 			break;
 
-		mxWindow *window = (mxWindow *) GetWindowLong (hwnd, GWL_USERDATA);
+		mxWindow *window = (mxWindow *) GetWindowLongPtr (hwnd, GWLP_USERDATA);
 		if (window)
 		{
 			mxEvent event;
@@ -553,13 +553,13 @@ static LRESULT CALLBACK WndProc (HWND hwnd, UINT uMessage, WPARAM wParam, LPARAM
 		if (isClosing)
 			break;
 
-		mxWindow *window = (mxWindow *) GetWindowLong (hwnd, GWL_USERDATA);
+		mxWindow *window = (mxWindow *) GetWindowLongPtr (hwnd, GWLP_USERDATA);
 		if (window)
 		{
 			HWND hWnd = (HWND) lParam;
 			if (::IsWindow(hWnd) && (LOWORD (wParam) == WA_ACTIVE || LOWORD (wParam) == WA_CLICKACTIVE))
 			{
-				mxWindow *window2 = (mxWindow *) GetWindowLong (hWnd, GWL_USERDATA);
+				mxWindow *window2 = (mxWindow *) GetWindowLongPtr (hWnd, GWLP_USERDATA);
 				if (window2)
 				{
 					if (hWnd == g_CurrentHWND && window2->getType () == MX_DIALOGWINDOW)
@@ -579,7 +579,7 @@ static LRESULT CALLBACK WndProc (HWND hwnd, UINT uMessage, WPARAM wParam, LPARAM
 		if (isClosing)
 			break;
 
-		mxWindow *window = (mxWindow *) GetWindowLong (hwnd, GWL_USERDATA);
+		mxWindow *window = (mxWindow *) GetWindowLongPtr (hwnd, GWLP_USERDATA);
 		if (window)
 		{
 			printf ("%s %d %d\n", window->getLabel (), wParam, window->getType ());
