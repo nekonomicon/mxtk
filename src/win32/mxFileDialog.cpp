@@ -93,10 +93,10 @@ mxGetSaveFileName (mxWindow *parent, const char *path, const char *filter)
 
 	if (filter)
 	{
-		while ((pos = strstr (filter, ";;")))
+		while ((pos = (char *)strstr (filter, ";;")))
 		{
 			len = (pos - filter);
-			pos = strchr (filter, '.') - 1;
+			pos = (char *)strchr (filter, '.') - 1;
 			memcpy (&szFilter[i], filter, len);
 			i += len + 1;
 			filter += len + 2;
@@ -106,7 +106,7 @@ mxGetSaveFileName (mxWindow *parent, const char *path, const char *filter)
 		len = strlen(filter);
 		memcpy (&szFilter[i], filter, len);
 		i += len + 1;
-		pos = strchr (filter, '.') - 1;
+		pos = (char *)strchr (filter, '.') - 1;
 		memcpy (&szFilter[i], pos, strchr (pos, ')') - pos);
 	}
 
