@@ -3,14 +3,15 @@ cmake_minimum_required(VERSION 2.8.12)
 project(mxtk)
 include(CompilerRuntime)
 
-file(GLOB SOURCE_FILES "src/common/*.cpp")
+file(GLOB SOURCES_COMMON "src/common/*.cpp")
 if(MSVC)
-	file(GLOB SOURCE_FILES "src/win32/*.cpp")
+	file(GLOB SOURCES_PLATFORM "src/win32/*.cpp")
 else()
-	file(GLOB SOURCE_FILES "src/qt/*.cpp")
+	file(GLOB SOURCES_PLATFORM "src/qt/*.cpp")
 endif()
 
-add_library(${PROJECT_NAME} STATIC ${SOURCE_FILES})
+list(APPEND SOURCES_COMMON ${SOURCES_PLATFORM})
+add_library(${PROJECT_NAME} STATIC ${SOURCES_COMMON})
 
 target_include_directories(${PROJECT_NAME} PRIVATE
 	"include"
