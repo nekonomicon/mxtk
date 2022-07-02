@@ -55,9 +55,12 @@ mxGlWindow::handleEvent (mxEvent *event)
 void
 mxGlWindow::redraw ()
 {
-	makeCurrent ();
-	draw ();
-	swapBuffers ();
+	if (d_this->context ()-> create ())
+	{
+		makeCurrent ();
+		draw ();
+		swapBuffers ();
+	}
 }
 
 
