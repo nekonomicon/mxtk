@@ -25,7 +25,7 @@ PLATFORM = qt
 STATIC_LIB_EXT = a
 SHARED_LIB_EXT = so
 
-MOC ?= moc
+MOC ?= moc-qt5
 
 MOC_HEADERS = $(wildcard src/$(PLATFORM)/*_i.h)
 MOC_PREFIX = $(subst $(PLATFORM)/,$(PLATFORM)/moc_,$(MOC_HEADERS))
