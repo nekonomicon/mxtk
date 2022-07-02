@@ -26,9 +26,12 @@ mxChooseColor (mxWindow *parent, int *r, int *g, int *b)
 		p = (QWidget *) parent->getHandle ();
 		QColor cc (*r, *g, *b);
 		cc = QColorDialog::getColor (cc, p, "Color");
-		*r = cc.red ();
-		*g = cc.green ();
-		*b = cc.blue ();
+		if (cc.isValid ())
+		{
+			*r = cc.red ();
+			*g = cc.green ();
+			*b = cc.blue ();
+		}
 		return true;
 	}
 	return false;
