@@ -62,12 +62,6 @@ mxWindow::mxWindow (mxWindow *parent, int x, int y, int w, int h, const char
 	if (!d_mainWindow)
 	{
 		d_mainWindow = this;
-		d_this->setCentralWidget (new QWidget (d_this));
-	}
-	else
-	{
-		if (parent == d_mainWindow)
-			d_this->setParent (d_mainWindow->d_this->centralWidget ());
 	}
 }
 
