@@ -25,6 +25,8 @@ mxWindow::mxWindow (mxWindow *parent, int x, int y, int w, int h, const char
 : mxWidget (parent, x, y, w, h, label)
 {
 	QWidget *p = 0;
+	Qt::WindowFlags flags;
+
 	if (parent)
 		p = (QWidget *) parent->getHandle ();
 
@@ -32,6 +34,20 @@ mxWindow::mxWindow (mxWindow *parent, int x, int y, int w, int h, const char
 
 	setHandle ((void *) d_this);
 	setParent (parent);
+
+	if (style == Normal)
+		flags = Qt::Widget;
+	else if (style == Popup)
+		flags = Qt::Popup;
+	else if (style == Dialog)
+		flags = Qt::Dialog;
+	else if (style == ModalDialog)
+	{
+		d_this->setWindowModality(Qt::WindowModal);
+		flags = Qt::Dialog;
+	}
+
+	d_this->setWindowFlags(flags);
 
 	if (parent)
 	{
