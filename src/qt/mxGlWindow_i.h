@@ -34,6 +34,7 @@ public:
 		d_dragging = false;
 		d_button = 0;
 		setMouseTracking (true);
+		installEventFilter (this);
 	}
 
 	~mxGlWindow_i ()
@@ -146,6 +147,23 @@ protected:
 		d_button = 0;
 	}
 	
+	virtual void keyPressEvent (QKeyEvent *e)
+	{
+		QOpenGLWidget::keyPressEvent (e);
+
+		mxEvent event;
+
+		event.key = tolower (e->key ());
+
+		if (e->modifiers () & Qt::ControlModifier)
+			event.modifiers |= mxEvent::KeyCtrl;
+		if (e->modifiers () & Qt::ShiftModifier)
+			event.modifiers |= mxEvent::KeyShift;
+
+		event.event = mxEvent::KeyDown;
+		d_GlWindow->handleEvent (&event);
+	}
+
 	virtual void timerEvent (QTimerEvent *e)
 	{
 		mxEvent event;

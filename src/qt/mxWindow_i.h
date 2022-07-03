@@ -36,6 +36,7 @@ public:
 		d_timerId = 0;
 		//setMouseGrabEnabled(true);
 		setMouseTracking (true);
+		installEventFilter (this);
 	}
 
 	~mxWindow_i ()
@@ -153,6 +154,23 @@ protected:
 		d_button = 0;
 	}
 	
+	virtual void keyPressEvent (QKeyEvent *e)
+	{
+		QMainWindow::keyPressEvent (e);
+
+		mxEvent event;
+
+		event.key = tolower (e->key ());
+
+		if (e->modifiers () & Qt::ControlModifier)
+			event.modifiers |= mxEvent::KeyCtrl;
+		if (e->modifiers () & Qt::ShiftModifier)
+			event.modifiers |= mxEvent::KeyShift;
+
+		event.event = mxEvent::KeyDown;
+		d_window->handleEvent (&event);
+	}
+
 	virtual void timerEvent (QTimerEvent *e)
 	{
 		mxEvent event;
