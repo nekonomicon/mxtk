@@ -26,7 +26,7 @@ style)
 
 	if (style == MultiSelection)
 		d_this->setSelectionMode( QAbstractItemView::ExtendedSelection );
-	d_this->connect (d_this, SIGNAL (selected (int)), d_this, SLOT (selectedEvent (int)));
+	d_this->connect (d_this, SIGNAL (itemSelectionChanged ()), d_this, SLOT (selectedEvent ()));
 
 	setHandle ((void *) d_this);
 	setType (MX_LISTBOX);
