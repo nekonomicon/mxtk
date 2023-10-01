@@ -35,6 +35,7 @@ public:
 		d_button = 0;
 		setMouseTracking (true);
 		installEventFilter (this);
+		setAttribute(Qt::WA_NoMousePropagation, true);
 	}
 
 	~mxGlWindow_i ()
