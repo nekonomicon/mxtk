@@ -35,6 +35,7 @@ public:
 		d_button = 0;
 		setMouseTracking (true);
 		installEventFilter (this);
+		setProperty("_kde_no_window_grab", true);
 	}
 
 	~mxGlWindow_i ()
